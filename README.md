@@ -29,7 +29,7 @@ A complete, production-ready e-commerce web application built with ASP.NET Core 
 
 | Technology | Purpose |
 |---|---|
-| ASP.NET Core MVC 8 | Web framework |
+| ASP.NET Core MVC 10 | Web framework |
 | Entity Framework Core | ORM & database operations |
 | ASP.NET Core Identity | Authentication & authorization |
 | SQL Server | Database |
@@ -44,7 +44,7 @@ A complete, production-ready e-commerce web application built with ASP.NET Core 
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server/) (LocalDB, Express, or Developer)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) or [VS Code](https://code.visualstudio.com/)
 - [Stripe Account](https://stripe.com/) (for payments)
@@ -54,7 +54,7 @@ A complete, production-ready e-commerce web application built with ASP.NET Core 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/aspnetcore-mvc-ecommerce.git
+   git clone https://github.com/fatihkaradag/aspnetcore-mvc-ecommerce.git
    cd aspnetcore-mvc-ecommerce
    ```
 
