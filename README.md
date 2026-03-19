@@ -3,6 +3,10 @@
 A complete, production-ready e-commerce web application built with ASP.NET Core MVC. This project follows the comprehensive Udemy course and implements real-world features including product management, shopping cart, secure payment processing, and order management.
 
 ---
+## 📸 Screenshots
+
+![1](screenshots/1.png)
+
 
 ## ✨ Features
 
