@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="aspnetcore-mvc-ecommerce.Web/aspnetcore-mvc-ecommerce.Web.csproj" />
+  <Project Path="aspnetcore-mvc-ecommerce.WebRazor_Temp/aspnetcore-mvc-ecommerce.WebRazor_Temp.csproj" Id="3160ee4e-a5f8-47d6-a285-516c6833ba62" />
 </Solution>

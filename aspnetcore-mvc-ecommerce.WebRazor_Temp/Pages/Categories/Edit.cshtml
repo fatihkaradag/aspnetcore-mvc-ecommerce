@@ -1,0 +1,73 @@
+﻿@page
+@model aspnetcore_mvc_ecommerce.WebRazor_Temp.Pages.Categories.EditModel
+
+
+<form method="post" asp-action="Edit" asp-route-id="Category.Id">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-page="/Categories/Index">Categories</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="d-flex align-items-baseline gap-3 mb-4">
+        <span class="section-label">New Entry</span>
+        <hr class="section-divider my-0">
+    </div>
+    <h1 class="section-title mb-5">Edit Category</h1>
+
+    <!-- Form Card -->
+
+    <input asp-for="Category.Id" hidden />
+
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card px-4 py-5 px-md-5">
+
+                <!-- Name -->
+                <div class="mb-4">
+                    <label asp-for="Category.Name" class="form-label"></label>
+                    <input asp-for="Category.Name"
+                           class="form-control"
+                           placeholder="e.g. Jackets, Accessories…" />
+                    <span asp-validation-for="Category.Name" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                </div>
+
+                <!-- Display Order -->
+                <div class="mb-5">
+                    <label asp-for="Category.DisplayOrder" class="form-label"></label>
+                    <input asp-for="Category.DisplayOrder"
+                           class="form-control"
+                           placeholder="e.g. 1, 2, 3…" />
+                    <span asp-validation-for="Category.DisplayOrder" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                    <div class="mt-1" style="font-size:0.75rem;color:var(--color-muted);font-family:var(--font-condensed);letter-spacing:0.08em;">
+                        Lower numbers appear first in the listing.
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex gap-3">
+                    <a asp-page="Categories/Index"
+                           class="btn btn-outline-dark flex-fill">
+                        <i class="fa-solid fa-arrow-left fa-sm me-2"></i>Back
+                    </a>
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        Update Category<i class="fa-solid fa-arrow-right fa-sm ms-2"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
