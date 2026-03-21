@@ -1,0 +1,16 @@
+﻿<!-- ===== TOASTR NOTIFICATIONS ===== -->
+@if (TempData["success"] != null)
+{
+    <!-- Success toast notification -->
+    <script type="text/javascript">
+        toastr.success('@TempData["success"]');
+    </script>
+}
+
+@if (TempData["error"] != null)
+{
+    <!-- Error toast notification -->
+    <script type="text/javascript">
+        toastr.error('@TempData["error"]');
+    </script>
+}

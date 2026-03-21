@@ -3,48 +3,165 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - aspnetcore_mvc_ecommerce.Web</title>
+    <title>@ViewData["Title"] - MVC Ecommerce</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/aspnetcore_mvc_ecommerce.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 </head>
 <body>
+
+    <!-- ===== NAVBAR ===== -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">aspnetcore_mvc_ecommerce.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+
+                <!-- Brand -->
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    MVC<span style="color:var(--color-accent)">.</span>ECOMMERCE
+                </a>
+
+                <!-- Mobile toggler -->
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <!-- Nav links -->
+                <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
+                    <ul class="navbar-nav align-items-lg-center gap-lg-1">
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                Home
+                            </a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Category" asp-action="Index">
+                                Categories
+                            </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                Privacy
+                            </a>
+                        </li>
+
+                        <!-- Divider (desktop only) -->
+                        <li class="nav-item d-none d-lg-block">
+                            <span style="width:1px;height:18px;background:var(--color-border);display:inline-block;margin:0 0.5rem;vertical-align:middle;"></span>
+                        </li>
+
+                        <!-- Cart icon -->
+                        <li class="nav-item">
+                            <a class="nav-link position-relative" href="#" title="Cart">
+                                <i class="fa-solid fa-bag-shopping" style="font-size:1rem;"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
+                                      style="background:var(--color-accent);font-size:0.55rem;padding:0.25em 0.45em;">
+                                    0
+                                </span>
+                            </a>
+                        </li>
+
+                        <!-- User dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+                                   data-bs-toggle="dropdown" href="#"
+                                   role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="d-flex align-items-center justify-content-center"
+                                      style="width:28px;height:28px;border-radius:50%;background:var(--color-mid);font-size:0.7rem;color:var(--color-light);">
+                                    <i class="fa-solid fa-user"></i>
+                                </span>
+                                <span class="d-none d-lg-inline">Username</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <span class="dropdown-item-text" style="font-family:var(--font-condensed);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);padding:0.4rem 1rem 0.2rem;">
+                                        Signed in as
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="dropdown-item-text" style="font-family:var(--font-condensed);font-weight:700;font-size:0.82rem;letter-spacing:0.06em;color:var(--color-white);padding:0 1rem 0.5rem;">
+                                        Username
+                                    </span>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#"><i class="fa-regular fa-user fa-fw me-2" style="color:var(--color-muted);"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-sliders fa-fw me-2" style="color:var(--color-muted);"></i>Admin Panel</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="#" style="color:var(--color-accent);">
+                                        <i class="fa-solid fa-arrow-right-from-bracket fa-fw me-2"></i>Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                     </ul>
                 </div>
+
             </div>
         </nav>
     </header>
+    <!-- ===== END NAVBAR ===== -->
+    <!-- ===== MAIN CONTENT ===== -->
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+    <!-- ===== END MAIN CONTENT ===== -->
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer border-top text-center">
+        <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - aspnetcore_mvc_ecommerce.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <span style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:0.1em;color:var(--color-white);">
+                MVC<span style="color:var(--color-accent);">.</span>ECOMMERCE
+            </span>
+
+            <span>
+                &copy; 2026 — All rights reserved
+                <i class="fa-solid fa-heart ms-1" style="color:var(--color-accent);"></i>
+            </span>
+
+            <div class="d-flex gap-3">
+                <a href="#" style="color:var(--color-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--color-white)'" onmouseout="this.style.color='var(--color-muted)'">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="#" style="color:var(--color-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--color-white)'" onmouseout="this.style.color='var(--color-muted)'">
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+                <a href="#" style="color:var(--color-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--color-white)'" onmouseout="this.style.color='var(--color-muted)'">
+                    <i class="fa-brands fa-pinterest"></i>
+                </a>
+            </div>
+
         </div>
     </footer>
+    <!-- ===== END FOOTER ===== -->
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Notification partial must come after Toastr JS is loaded -->
+    <partial name="_Notification" />
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
