@@ -1,27 +1,25 @@
-﻿using aspnetcore_mvc_ecommerce.DataAccess.Data;
+﻿using aspnetcore_mvc_ecommerce.DataAccess.Repository.IRepository;
 using aspnetcore_mvc_ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace aspnetcore_mvc_ecommerce.Web.Controllers
 {
     // Handles all HTTP requests related to Category management
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        private readonly ILogger<CategoryController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryController(ApplicationDbContext db, ILogger<CategoryController> logger)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
-            _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: /Category/Index — retrieves and displays all categories
         public async Task<IActionResult> Index()
         {
-            List<Category> objCategoryList = await _db.Categories.ToListAsync();
-            return View(objCategoryList);
+            // Fetches all categories asynchronously via repository
+            IEnumerable<Category> objCategoryList = await _unitOfWork.Category.GetAllAsync();
+            return View(objCategoryList.ToList());
         }
 
         // GET: /Category/Create — returns the empty create form
@@ -37,8 +35,9 @@ namespace aspnetcore_mvc_ecommerce.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                await _db.SaveChangesAsync();
+                // Adds new category via repository and persists changes
+                _unitOfWork.Category.Add(obj);
+                await _unitOfWork.SaveAsync();
                 TempData["success"] = "Category created successfully.";
                 return RedirectToAction("Index");
             }
@@ -50,18 +49,12 @@ namespace aspnetcore_mvc_ecommerce.Web.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             // Validates that id is not null or zero
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+            if (id == null || id == 0) return NotFound();
 
-            // Fetches category from database using async LINQ query
-            Category? categoryFromDb = await _db.Categories.FirstOrDefaultAsync(u => u.Id == id);
+            // Fetches category asynchronously via repository
+            Category? categoryFromDb = await _unitOfWork.Category.GetAsync(u => u.Id == id);
 
-            if (categoryFromDb == null)
-            {
-                return NotFound();
-            }
+            if (categoryFromDb == null) return NotFound();
 
             return View(categoryFromDb);
         }
@@ -71,17 +64,20 @@ namespace aspnetcore_mvc_ecommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Category obj)
         {
+            // Cross-check route id with form id to prevent manipulation
             if (id != obj.Id) return BadRequest();
 
             if (ModelState.IsValid)
             {
-                var existing = await _db.Categories.FirstOrDefaultAsync(u => u.Id == obj.Id);
+                // Verify the record actually exists before updating
+                Category? existing = await _unitOfWork.Category.GetAsync(u => u.Id == obj.Id);
                 if (existing == null) return NotFound();
 
+                // Copy new values into tracked entity to avoid EF Core tracking conflict
                 existing.Name = obj.Name;
                 existing.DisplayOrder = obj.DisplayOrder;
 
-                await _db.SaveChangesAsync();
+                await _unitOfWork.SaveAsync();
                 TempData["success"] = "Category updated successfully.";
                 return RedirectToAction("Index");
             }
@@ -93,18 +89,12 @@ namespace aspnetcore_mvc_ecommerce.Web.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             // Validates that id is not null or zero
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+            if (id == null || id == 0) return NotFound();
 
-            // Fetches category from database using async LINQ query
-            Category? categoryFromDb = await _db.Categories.FirstOrDefaultAsync(u => u.Id == id);
+            // Fetches category asynchronously via repository
+            Category? categoryFromDb = await _unitOfWork.Category.GetAsync(u => u.Id == id);
 
-            if (categoryFromDb == null)
-            {
-                return NotFound();
-            }
+            if (categoryFromDb == null) return NotFound();
 
             return View(categoryFromDb);
         }
@@ -114,20 +104,16 @@ namespace aspnetcore_mvc_ecommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletePOST(int? id)
         {
-            // Validates that id is not null
+            // Validates that id is not null or zero
             if (id == null || id == 0) return NotFound();
 
-            // Fetches category from database before removing
-            Category? obj = await _db.Categories.FirstOrDefaultAsync(u => u.Id == id);
+            // Fetches category asynchronously via repository before removing
+            Category? obj = await _unitOfWork.Category.GetAsync(u => u.Id == id);
+            if (obj == null) return NotFound();
 
-            if (obj == null)
-            {
-                return NotFound();
-            }
-
-            // Removes the category and saves changes asynchronously
-            _db.Categories.Remove(obj);
-            await _db.SaveChangesAsync();
+            // Removes category via repository and persists changes
+            _unitOfWork.Category.Remove(obj);
+            await _unitOfWork.SaveAsync();
             TempData["success"] = "Category deleted successfully.";
 
             return RedirectToAction("Index");
