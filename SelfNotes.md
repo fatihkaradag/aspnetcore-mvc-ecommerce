@@ -16,8 +16,6 @@ Tools > Nuget Package Manager > Package Manager Console
 ## When default
 - Delete migration folder all files 
 ```bash
-   Drop-Database
-   Update-Database
    Add-Migration AddCategoryTableToDb
    Update-Database
 ```

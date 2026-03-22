@@ -1,7 +1,8 @@
-﻿using aspnetcore_mvc_ecommerce.Web.Models;
+﻿
+using aspnetcore_mvc_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace aspnetcore_mvc_ecommerce.Web.Data
+namespace aspnetcore_mvc_ecommerce.DataAccess.Data
 {
     public class ApplicationDbContext : DbContext
     {

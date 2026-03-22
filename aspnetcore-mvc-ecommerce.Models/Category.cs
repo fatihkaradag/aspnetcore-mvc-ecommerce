@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace aspnetcore_mvc_ecommerce.Web.Models
+namespace aspnetcore_mvc_ecommerce.Models
 {
     // Represents a product category entity mapped to the database
     public class Category

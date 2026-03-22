@@ -1,4 +1,7 @@
 <Solution>
+  <Project Path="aspnetcore-mvc-ecommerce.DataAccess/aspnetcore-mvc-ecommerce.DataAccess.csproj" Id="729073d5-148a-4c2d-bb18-97ec9734f0f4" />
+  <Project Path="aspnetcore-mvc-ecommerce.Models/aspnetcore-mvc-ecommerce.Models.csproj" Id="9d5f0791-fffc-4c6b-9f0e-35cc81d2d9e1" />
+  <Project Path="aspnetcore-mvc-ecommerce.Utility/aspnetcore-mvc-ecommerce.Utility.csproj" Id="a8bcdd46-9d49-4993-8b5b-751b4ba91b7b" />
   <Project Path="aspnetcore-mvc-ecommerce.Web/aspnetcore-mvc-ecommerce.Web.csproj" />
   <Project Path="aspnetcore-mvc-ecommerce.WebRazor_Temp/aspnetcore-mvc-ecommerce.WebRazor_Temp.csproj" Id="3160ee4e-a5f8-47d6-a285-516c6833ba62" />
 </Solution>

@@ -1,4 +1,4 @@
-namespace aspnetcore_mvc_ecommerce.Web.Models
+namespace aspnetcore_mvc_ecommerce.Models
 {
     public class ErrorViewModel
     {
