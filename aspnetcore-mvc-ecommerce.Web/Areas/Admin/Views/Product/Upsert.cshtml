@@ -36,9 +36,7 @@
                 <!-- Description -->
                 <div class="mb-4">
                     <label asp-for="Product.Description" class="form-label"></label>
-                    <!-- Textarea used for long-form description input -->
                     <textarea asp-for="Product.Description" class="form-control" rows="4"></textarea>
-                    <span asp-validation-for="Product.Description" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
                 </div>
 
                 <!-- Author -->
@@ -124,7 +122,22 @@
 </form>
 
 @section Scripts {
-    @* Loads client-side validation scripts *@
+    <script>
+        @* Loads client-side validation scripts *@
+
+        tinymce.init({
+          selector: 'textarea',
+          plugins: [
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons',
+            'link', 'lists', 'media', 'searchreplace', 'table',
+            'visualblocks', 'wordcount'
+          ],
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+          uploadcare_public_key: '52578f37f4ae41aa1951',
+        });
+
+    </script>
+    
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

@@ -325,9 +325,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/ligvy46rq39i3t9tacc8gi46seo8i3xqa9aui1kr1lsn788s/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- Notification partial must come after Toastr JS is loaded -->
     <partial name="_Notification" />
 
     @await RenderSectionAsync("Scripts", required: false)
