@@ -1,26 +1,27 @@
 ﻿@model ProductVM
 
-<form method="post" asp-action="Edit" asp-route-id="@Model.Product.Id">
+<!-- Breadcrumb navigation — dynamically shows Create or Update based on product Id -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@(Model.Product.Id != 0 ? "Update" : "Create")</li>
+    </ol>
+</nav>
 
-    <!-- Breadcrumb navigation -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit</li>
-        </ol>
-    </nav>
+<form method="post" asp-area="Admin" asp-controller="Product" asp-action="Upsert" enctype="multipart/form-data">
 
-    <!-- Page Header -->
-    <div class="d-flex align-items-baseline gap-3 mb-4">
-        <span class="section-label">New Entry</span>
-        <hr class="section-divider my-0">
-    </div>
-    <h1 class="section-title mb-5">Edit Product</h1>
-
-    <!-- Hidden field sends product Id with the form POST -->
+    <!-- Hidden field sends product Id with the form POST — 0 means create, non-zero means update -->
     <input asp-for="Product.Id" hidden />
 
+    <!-- Page Header — dynamically shows Create or Update -->
+    <div class="d-flex align-items-baseline gap-3 mb-4">
+        <span class="section-label">@(Model.Product.Id != 0 ? "Edit Entry" : "New Entry")</span>
+        <hr class="section-divider my-0">
+    </div>
+    <h1 class="section-title mb-5">@(Model.Product.Id != 0 ? "Update Product" : "Create Product")</h1>
+
+    <!-- Form Card -->
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card px-4 py-5 px-md-5">
@@ -58,9 +59,15 @@
                 <div class="mb-4">
                     <label asp-for="Product.CategoryId" class="form-label"></label>
                     <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select">
-                        <option disabled value="">-- Select Category --</option>
+                        <option disabled selected value="">-- Select Category --</option>
                     </select>
                     <span asp-validation-for="Product.CategoryId" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                </div>
+
+                <!-- Product Image Upload — accepts image files only -->
+                <div class="mb-4">
+                    <label asp-for="Product.ImageUrl" class="form-label mt-2"></label>
+                    <input type="file" name="file" class="form-control border-0 shadow" accept="image/*" />
                 </div>
 
                 <!-- Price fields in a responsive grid -->
@@ -98,14 +105,15 @@
 
                 <!-- Actions -->
                 <div class="d-flex gap-3">
-                    <!-- Back button navigates to Product list without updating -->
+                    <!-- Back button navigates to Product list without saving -->
                     <a asp-area="Admin" asp-controller="Product" asp-action="Index"
                            class="btn btn-outline-dark flex-fill">
                         <i class="fa-solid fa-arrow-left fa-sm me-2"></i>Back
                     </a>
-                    <!-- Submit button triggers form POST -->
+                    <!-- Submit button label changes based on create or update mode -->
                     <button type="submit" class="btn btn-primary flex-fill">
-                        Update Product<i class="fa-solid fa-arrow-right fa-sm ms-2"></i>
+                        @(Model.Product.Id != 0 ? "Update Product" : "Create Product")
+                        <i class="fa-solid fa-arrow-right fa-sm ms-2"></i>
                     </button>
                 </div>
 

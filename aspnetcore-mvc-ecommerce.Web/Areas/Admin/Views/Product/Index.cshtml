@@ -16,7 +16,7 @@
             <h2 class="text-primary">Product List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-area="Admin" asp-controller="Product" asp-action="Create" class="btn btn-sm btn-primary">
+            <a asp-area="Admin" asp-controller="Product" asp-action="Upsert" class="btn btn-sm btn-primary">
                 Create New Product
             </a>
         </div>
@@ -46,7 +46,7 @@
                     <!-- Edit and Delete action buttons -->
                     <td>
                         <div class="btn-group" role="group">
-                            <a asp-area="Admin" asp-controller="Product" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-sm btn-primary mx-2">Edit</a>
+                            <a asp-area="Admin" asp-controller="Product" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-sm btn-primary mx-2">Edit</a>
                             <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-sm btn-danger mx-2">Delete</a>
                         </div>
                     </td>

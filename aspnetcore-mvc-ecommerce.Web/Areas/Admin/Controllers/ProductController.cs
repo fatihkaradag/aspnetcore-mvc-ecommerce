@@ -27,10 +27,10 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
             return View(objProductList.ToList());
         }
 
-        // GET: /Product/Create — returns the empty create form with category dropdown
-        public async Task<IActionResult> Create()
+        // GET: /Product/Upsert — returns create form if id is null, edit form if id exists
+        public async Task<IActionResult> Upsert(int? id)
         {
-            // Builds the ViewModel with an empty product and category dropdown
+            // Builds the ViewModel with category dropdown
             ProductVM productVM = new()
             {
                 Product = new Product(),
@@ -42,86 +42,56 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
                     })
             };
 
-            return View(productVM);
-        }
-
-        // POST: /Product/Create — validates and saves new product to database
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductVM productVM)
-        {
-            if (ModelState.IsValid)
+            if (id == null || id == 0)
             {
-                // Adds new product via repository and persists changes
-                _unitOfWork.Product.Add(productVM.Product);
-                await _unitOfWork.SaveAsync();
-                TempData["success"] = "Product created successfully.";
-                return RedirectToAction("Index");
+                // Create mode — return empty product form
+                return View(productVM);
             }
-
-            // Repopulates category dropdown if validation fails
-            productVM.CategoryList = (await _unitOfWork.Category.GetAllAsync())
-                .Select(c => new SelectListItem
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                });
-
-            return View(productVM);
-        }
-
-        // GET: /Product/Edit — retrieves product by id and returns edit form
-        public async Task<IActionResult> Edit(int? id)
-        {
-            // Validates that id is not null or zero
-            if (id == null || id == 0) return NotFound();
-
-            // Fetches product asynchronously via repository
-            Product? productFromDb = await _unitOfWork.Product.GetAsync(u => u.Id == id);
-            if (productFromDb == null) return NotFound();
-
-            // Builds the ViewModel with existing product and category dropdown
-            ProductVM productVM = new()
+            else
             {
-                Product = productFromDb,
-                CategoryList = (await _unitOfWork.Category.GetAllAsync())
-                    .Select(c => new SelectListItem
-                    {
-                        Text = c.Name,
-                        Value = c.Id.ToString()
-                    })
-            };
+                // Edit mode — fetch existing product and populate form
+                Product? productFromDb = await _unitOfWork.Product.GetAsync(u => u.Id == id);
+                if (productFromDb == null) return NotFound();
 
-            return View(productVM);
+                productVM.Product = productFromDb;
+                return View(productVM);
+            }
         }
 
-        // POST: /Product/Edit — validates and updates existing product in database
+        // POST: /Product/Upsert — creates or updates product based on Id value
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductVM productVM)
+        public async Task<IActionResult> Upsert(ProductVM productVM, IFormFile? file)
         {
-            // Cross-check route id with form id to prevent manipulation
-            if (id != productVM.Product.Id) return BadRequest();
-
             if (ModelState.IsValid)
             {
-                // Verify the record actually exists before updating
-                Product? existing = await _unitOfWork.Product.GetAsync(u => u.Id == productVM.Product.Id);
-                if (existing == null) return NotFound();
+                if (productVM.Product.Id == 0)
+                {
+                    // Create mode — add new product to database
+                    _unitOfWork.Product.Add(productVM.Product);
+                    TempData["success"] = "Product created successfully.";
+                }
+                else
+                {
+                    // Edit mode — fetch and update existing product
+                    Product? existing = await _unitOfWork.Product.GetAsync(u => u.Id == productVM.Product.Id);
+                    if (existing == null) return NotFound();
 
-                // Copy new values into tracked entity to avoid EF Core tracking conflict
-                existing.Title = productVM.Product.Title;
-                existing.Description = productVM.Product.Description;
-                existing.Author = productVM.Product.Author;
-                existing.ISBN = productVM.Product.ISBN;
-                existing.ListPrice = productVM.Product.ListPrice;
-                existing.Price = productVM.Product.Price;
-                existing.Price50 = productVM.Product.Price50;
-                existing.Price100 = productVM.Product.Price100;
-                existing.CategoryId = productVM.Product.CategoryId;
+                    // Copy new values into tracked entity to avoid EF Core tracking conflict
+                    existing.Title = productVM.Product.Title;
+                    existing.Description = productVM.Product.Description;
+                    existing.Author = productVM.Product.Author;
+                    existing.ISBN = productVM.Product.ISBN;
+                    existing.ListPrice = productVM.Product.ListPrice;
+                    existing.Price = productVM.Product.Price;
+                    existing.Price50 = productVM.Product.Price50;
+                    existing.Price100 = productVM.Product.Price100;
+                    existing.CategoryId = productVM.Product.CategoryId;
+
+                    TempData["success"] = "Product updated successfully.";
+                }
 
                 await _unitOfWork.SaveAsync();
-                TempData["success"] = "Product updated successfully.";
                 return RedirectToAction("Index");
             }
 
