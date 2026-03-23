@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MVC Ecommerce</title>
+    <title>@ViewData["Title"] — MVC-Ecommerce</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -15,14 +15,23 @@
 </head>
 <body>
 
+    <!-- ===== TOP BAR ===== -->
+    <div style="background-color:var(--c-ink);color:var(--c-tan);text-align:center;
+        padding:0.45rem 1rem;font-family:var(--font-body);font-size:0.72rem;
+        font-weight:500;letter-spacing:0.06em;">
+        <i class="fa-solid fa-truck-fast me-2" style="color:var(--c-accent);font-size:0.65rem;"></i>
+        Free shipping on orders over ₺500 &nbsp;·&nbsp;
+        <a href="#" style="color:var(--c-accent);text-decoration:underline;text-underline-offset:2px;">Browse deals</a>
+    </div>
+
     <!-- ===== NAVBAR ===== -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark">
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
 
                 <!-- Brand -->
                 <a class="navbar-brand" asp-area="Customer" asp-controller="Home" asp-action="Index">
-                    MVC<span style="color:var(--color-accent)">.</span>ECOMMERCE
+                    <em>MVC</em><span>Ecommerce</span>
                 </a>
 
                 <!-- Mobile toggler -->
@@ -56,37 +65,65 @@
                             <a class="nav-link dropdown-toggle" href="#"
                                    role="button" data-bs-toggle="dropdown"
                                    aria-haspopup="true" aria-expanded="false">
-                                Admin
+                                <i class="fa-solid fa-screwdriver-wrench fa-xs me-1"
+                                   style="color:var(--c-accent);"></i>Admin
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end text-light">
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <span class="dropdown-item-text"
-                                          style="font-family:var(--font-condensed);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);padding:0.4rem 1rem 0.2rem;">
+                                          style="font-size:0.68rem;letter-spacing:0.1em;
+                                        text-transform:uppercase;color:var(--c-tan);
+                                        padding:0.45rem 1rem 0.15rem;font-weight:600;">
                                         Admin Area
                                     </span>
                                 </li>
                                 <li>
-                                    <!-- Link to Category management in Admin area -->
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
-                                        <i class="fa-solid fa-tag fa-fw me-2" style="color:var(--color-muted);"></i>Categories
+                                        <i class="fa-solid fa-tag fa-fw me-2" style="color:var(--c-tan);"></i>Categories
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                                        <i class="fa-solid fa-tag fa-fw me-2" style="color:var(--c-tan);"></i>Products
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                             </ul>
                         </li>
 
-
                         <!-- Divider (desktop only) -->
-                        <li class="nav-item d-none d-lg-block">
-                            <span style="width:1px;height:18px;background:var(--color-border);display:inline-block;margin:0 0.5rem;vertical-align:middle;"></span>
+                        <li class="nav-item d-none d-lg-flex align-items-center">
+                            <span style="width:1px;height:16px;background:var(--c-border-dk);
+                            display:inline-block;margin:0 0.4rem;"></span>
                         </li>
 
-                        <!-- Cart icon -->
+                        <!-- Inline Search (desktop only) -->
+                        <li class="nav-item d-none d-lg-block">
+                            <div style="position:relative;">
+                                <input type="text"
+                                       placeholder="Search books, authors…"
+                                       style="font-family:var(--font-body);font-size:0.78rem;
+                                background:var(--c-parchment);border:1.5px solid var(--c-border);
+                                border-radius:999px;padding:0.38rem 2.2rem 0.38rem 1rem;
+                                color:var(--c-ink);width:200px;outline:none;
+                                transition:border-color 0.22s, width 0.3s;font-style:italic;"
+                                       onfocus="this.style.borderColor='var(--c-accent)';this.style.width='240px'"
+                                       onblur="this.style.borderColor='var(--c-border)';this.style.width='200px'" />
+                                <i class="fa-solid fa-magnifying-glass"
+                                   style="position:absolute;right:0.75rem;top:50%;
+                                transform:translateY(-50%);color:var(--c-tan);
+                                font-size:0.68rem;pointer-events:none;"></i>
+                            </div>
+                        </li>
+
+                        <!-- Cart -->
                         <li class="nav-item">
-                            <a class="nav-link position-relative" href="#" title="Cart">
-                                <i class="fa-solid fa-bag-shopping" style="font-size:1rem;"></i>
+                            <a class="nav-link position-relative" href="#" title="Cart"
+                                   style="padding-left:0.6rem !important;padding-right:0.6rem !important;">
+                                <i class="fa-regular fa-bookmark" style="font-size:1rem;"></i>
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
-                                      style="background:var(--color-accent);font-size:0.55rem;padding:0.25em 0.45em;">
+                                      style="background:var(--c-accent);font-size:0.52rem;
+                                    padding:0.22em 0.42em;font-family:var(--font-body);">
                                     0
                                 </span>
                             </a>
@@ -96,30 +133,61 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
                                    data-bs-toggle="dropdown" href="#"
-                                   role="button" aria-haspopup="true" aria-expanded="false">
+                                   role="button" aria-haspopup="true" aria-expanded="false"
+                                   style="padding-left:0.4rem !important;">
                                 <span class="d-flex align-items-center justify-content-center"
-                                      style="width:28px;height:28px;border-radius:50%;background:var(--color-mid);font-size:0.7rem;color:var(--color-light);">
-                                    <i class="fa-solid fa-user"></i>
+                                      style="width:30px;height:30px;border-radius:50%;
+                                    background:var(--c-parchment);
+                                    border:1.5px solid var(--c-border-dk);
+                                    font-size:0.75rem;color:var(--c-brown);">
+                                    <i class="fa-regular fa-user"></i>
                                 </span>
-                                <span class="d-none d-lg-inline">Username</span>
+                                <span class="d-none d-lg-inline"
+                                      style="font-size:0.8rem;color:var(--c-brown);font-weight:500;">
+                                    Username
+                                </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <span class="dropdown-item-text text-light" style="font-family:var(--font-condensed);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);padding:0.4rem 1rem 0.2rem;">
-                                        Signed in as
+                                    <span class="dropdown-item-text"
+                                          style="font-size:0.72rem;color:var(--c-tan);
+                                        font-style:italic;padding:0.5rem 1rem 0.1rem;">
+                                        Hello,
                                     </span>
                                 </li>
                                 <li>
-                                    <span class="dropdown-item-text text-light" style="font-family:var(--font-condensed);font-weight:700;font-size:0.82rem;letter-spacing:0.06em;color:var(--color-white);padding:0 1rem 0.5rem;">
+                                    <span class="dropdown-item-text"
+                                          style="font-family:var(--font-serif);font-weight:600;
+                                        font-size:0.9rem;color:var(--c-ink);
+                                        padding:0 1rem 0.5rem;">
                                         Username
                                     </span>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#"><i class="fa-regular fa-user fa-fw me-2" style="color:var(--color-muted);"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-sliders fa-fw me-2" style="color:var(--color-muted);"></i>Admin Panel</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa-regular fa-user fa-fw me-2" style="color:var(--c-tan);"></i>Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa-regular fa-heart fa-fw me-2" style="color:var(--c-tan);"></i>Wishlist
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa-regular fa-clock fa-fw me-2" style="color:var(--c-tan);"></i>Orders
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                        <i class="fa-solid fa-sliders fa-fw me-2" style="color:var(--c-tan);"></i>Admin Panel
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="#" style="color:var(--color-accent);">
+                                    <a class="dropdown-item" href="#"
+                                           style="color:var(--c-danger) !important;">
                                         <i class="fa-solid fa-arrow-right-from-bracket fa-fw me-2"></i>Logout
                                     </a>
                                 </li>
@@ -134,8 +202,6 @@
     </header>
     <!-- ===== END NAVBAR ===== -->
     <!-- ===== MAIN CONTENT ===== -->
-
-
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -143,28 +209,112 @@
     </div>
     <!-- ===== END MAIN CONTENT ===== -->
     <!-- ===== FOOTER ===== -->
-    <footer class="footer border-top text-center">
-        <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+    <footer class="footer">
+        <div class="container">
 
-            <span style="font-family:var(--font-display);font-size:1.1rem;letter-spacing:0.1em;color:var(--color-white);">
-                MVC<span style="color:var(--color-accent);">.</span>ECOMMERCE
-            </span>
+            <!-- Main footer grid -->
+            <div class="row gy-4 pb-4"
+                 style="border-bottom:1px solid rgba(255,255,255,0.08);">
 
-            <span>
-                &copy; 2026 — All rights reserved
-                <i class="fa-solid fa-heart ms-1" style="color:var(--color-accent);"></i>
-            </span>
+                <!-- Brand -->
+                <div class="col-12 col-md-4">
+                    <div style="font-family:var(--font-display);font-size:1.6rem;
+                        font-style:italic;color:var(--c-cream);
+                        letter-spacing:0.02em;margin-bottom:0.75rem;">
+                        <em style="color:var(--c-cream);">MVC</em><span style="font-style:normal;color:var(--c-accent);">Ecommerce</span>
+                    </div>
+                    <p style="font-size:0.82rem;color:var(--c-tan);line-height:1.65;
+                        max-width:260px;margin:0;font-style:italic;">
+                        Curated books for curious minds. Discover your next favourite read.
+                    </p>
+                </div>
 
-            <div class="d-flex gap-3">
-                <a href="#" style="color:var(--color-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--color-white)'" onmouseout="this.style.color='var(--color-muted)'">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-                <a href="#" style="color:var(--color-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--color-white)'" onmouseout="this.style.color='var(--color-muted)'">
-                    <i class="fa-brands fa-tiktok"></i>
-                </a>
-                <a href="#" style="color:var(--color-muted);transition:color 0.2s;" onmouseover="this.style.color='var(--color-white)'" onmouseout="this.style.color='var(--color-muted)'">
-                    <i class="fa-brands fa-pinterest"></i>
-                </a>
+                <!-- Explore -->
+                <div class="col-6 col-md-2">
+                    <p style="font-size:0.68rem;font-weight:600;letter-spacing:0.1em;
+                        text-transform:uppercase;color:var(--c-tan);margin-bottom:0.75rem;">
+                        Explore
+                    </p>
+                    <ul style="list-style:none;padding:0;margin:0;
+                        display:flex;flex-direction:column;gap:0.4rem;">
+                        <li><a href="#" style="font-size:0.82rem;">New Arrivals</a></li>
+                        <li><a href="#" style="font-size:0.82rem;">Bestsellers</a></li>
+                        <li><a href="#" style="font-size:0.82rem;">Staff Picks</a></li>
+                        <li><a href="#" style="font-size:0.82rem;">Deals &amp; Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Help -->
+                <div class="col-6 col-md-2">
+                    <p style="font-size:0.68rem;font-weight:600;letter-spacing:0.1em;
+                        text-transform:uppercase;color:var(--c-tan);margin-bottom:0.75rem;">
+                        Help
+                    </p>
+                    <ul style="list-style:none;padding:0;margin:0;
+                        display:flex;flex-direction:column;gap:0.4rem;">
+                        <li><a href="#" style="font-size:0.82rem;">FAQ</a></li>
+                        <li><a href="#" style="font-size:0.82rem;">Shipping</a></li>
+                        <li><a href="#" style="font-size:0.82rem;">Returns</a></li>
+                        <li><a href="#" style="font-size:0.82rem;">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social -->
+                <div class="col-12 col-md-4">
+                    <p style="font-size:0.68rem;font-weight:600;letter-spacing:0.1em;
+                        text-transform:uppercase;color:var(--c-tan);margin-bottom:0.75rem;">
+                        Follow Us
+                    </p>
+                    <div class="d-flex gap-3 mb-3">
+                        <a href="#"
+                               style="width:34px;height:34px;border-radius:50%;
+                            border:1px solid rgba(255,255,255,0.12);display:flex;
+                            align-items:center;justify-content:center;
+                            color:var(--c-tan);font-size:0.8rem;transition:all 0.2s;"
+                               onmouseover="this.style.borderColor='var(--c-accent)';this.style.color='var(--c-accent)'"
+                               onmouseout="this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='var(--c-tan)'">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                               style="width:34px;height:34px;border-radius:50%;
+                            border:1px solid rgba(255,255,255,0.12);display:flex;
+                            align-items:center;justify-content:center;
+                            color:var(--c-tan);font-size:0.8rem;transition:all 0.2s;"
+                               onmouseover="this.style.borderColor='var(--c-accent)';this.style.color='var(--c-accent)'"
+                               onmouseout="this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='var(--c-tan)'">
+                            <i class="fa-brands fa-tiktok"></i>
+                        </a>
+                        <a href="#"
+                               style="width:34px;height:34px;border-radius:50%;
+                            border:1px solid rgba(255,255,255,0.12);display:flex;
+                            align-items:center;justify-content:center;
+                            color:var(--c-tan);font-size:0.8rem;transition:all 0.2s;"
+                               onmouseover="this.style.borderColor='var(--c-accent)';this.style.color='var(--c-accent)'"
+                               onmouseout="this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='var(--c-tan)'">
+                            <i class="fa-brands fa-goodreads"></i>
+                        </a>
+                    </div>
+                    <p style="font-size:0.75rem;color:var(--c-tan);
+                        font-style:italic;margin:0;line-height:1.5;">
+                        Join our reading community and get weekly picks in your inbox.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="d-flex flex-column flex-md-row align-items-center
+                justify-content-between gap-2 pt-4">
+                <span style="font-size:0.75rem;color:var(--c-tan);">
+                    &copy; 2026 MVC-Ecommerce &mdash; All rights reserved
+                    <i class="fa-solid fa-heart ms-1" style="color:var(--c-accent);"></i>
+                </span>
+                <div class="d-flex gap-3">
+                    <a href="#" style="font-size:0.72rem;">Privacy Policy</a>
+                    <a href="#" style="font-size:0.72rem;">Terms of Use</a>
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Privacy"
+                       style="font-size:0.72rem;">About</a>
+                </div>
             </div>
 
         </div>

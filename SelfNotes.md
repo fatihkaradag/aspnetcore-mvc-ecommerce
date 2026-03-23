@@ -14,8 +14,12 @@ Tools > Nuget Package Manager > Package Manager Console
 ```
 
 ## When default
-- Delete migration folder all files 
 ```bash
-   Add-Migration AddCategoryTableToDb
-   Update-Database
+# 1. First delete all migration folder (Migrations folder)
+
+# 2. Package Manager Console:
+Add-Migration InitialCreate
+
+# 3. Then:
+Update-Database
 ```

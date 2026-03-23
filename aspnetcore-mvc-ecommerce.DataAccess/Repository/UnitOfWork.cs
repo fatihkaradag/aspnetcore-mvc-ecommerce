@@ -8,14 +8,16 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Repository
     {
         private readonly ApplicationDbContext _db;
 
-        // Category repository instance accessible across the application
+        // repositories instance accessible across the application
         public ICategoryRepository Category { get; private set; }
+        public IProductRepository Product { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
-            // Initializes category repository with the shared database context
+            // Initializes repositories with the shared database context
             Category = new CategoryRepository(_db);
+            Product = new ProductRepository(_db);
         }
 
         // Persists all pending changes to the database synchronously

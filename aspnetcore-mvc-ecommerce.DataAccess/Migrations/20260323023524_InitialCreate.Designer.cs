@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aspnetcore_mvc_ecommerce.DataAccess.Data;
 
@@ -10,9 +11,11 @@ using aspnetcore_mvc_ecommerce.DataAccess.Data;
 namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260323023524_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,10 +102,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double>("ListPrice")
                         .HasColumnType("float");
 
@@ -134,7 +133,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                             CategoryId = 1,
                             Description = "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan, set in the Jazz Age on Long Island.",
                             ISBN = "9780743273565",
-                            ImageUrl = "",
                             ListPrice = 29.0,
                             Price = 24.0,
                             Price100 = 17.0,
@@ -148,7 +146,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                             CategoryId = 2,
                             Description = "A brief history of humankind, exploring how Homo sapiens came to dominate the Earth and what the future holds for our species.",
                             ISBN = "9780062316097",
-                            ImageUrl = "",
                             ListPrice = 35.0,
                             Price = 30.0,
                             Price100 = 22.0,
@@ -162,7 +159,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                             CategoryId = 3,
                             Description = "An exploration of cosmology, black holes, and the nature of time written for general audiences by one of the greatest physicists.",
                             ISBN = "9780553380163",
-                            ImageUrl = "",
                             ListPrice = 40.0,
                             Price = 35.0,
                             Price100 = 25.0,
@@ -176,7 +172,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                             CategoryId = 4,
                             Description = "The exclusive biography of Steve Jobs, based on more than forty interviews with Jobs conducted over two years.",
                             ISBN = "9781451648539",
-                            ImageUrl = "",
                             ListPrice = 45.0,
                             Price = 40.0,
                             Price100 = 30.0,
@@ -190,7 +185,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                             CategoryId = 5,
                             Description = "A poetic tale about a young prince who travels the universe and learns about life, love, and loss.",
                             ISBN = "9780156012195",
-                            ImageUrl = "",
                             ListPrice = 20.0,
                             Price = 17.0,
                             Price100 = 12.0,
@@ -204,7 +198,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                             CategoryId = 5,
                             Description = "A dystopian novel set in a totalitarian society where Big Brother watches your every move and independent thinking is a crime.",
                             ISBN = "9780451524935",
-                            ImageUrl = "",
                             ListPrice = 25.0,
                             Price = 21.0,
                             Price100 = 15.0,

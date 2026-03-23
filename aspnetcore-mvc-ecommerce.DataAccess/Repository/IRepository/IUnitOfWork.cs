@@ -3,8 +3,9 @@
     // UnitOfWork interface — provides access to all repositories through a single entry point
     public interface IUnitOfWork
     {
-        // Exposes the Category repository for category-related operations
+        // Exposes repositories for operations
         ICategoryRepository Category { get; }
+        IProductRepository Product { get; }
 
         // Persists all pending changes to the database synchronously
         void Save();
