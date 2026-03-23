@@ -5,8 +5,8 @@
     <!-- Breadcrumb navigation -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Category" asp-action="Index">Categories</a></li>
+            <li class="breadcrumb-item"><a asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a></li>
             <li class="breadcrumb-item active" aria-current="page">Delete</li>
         </ol>
     </nav>
@@ -53,7 +53,7 @@
                 <!-- Actions -->
                 <div class="d-flex gap-3">
                     <!-- Back button navigates to Category list without deleting -->
-                    <a asp-controller="Category" asp-action="Index"
+                    <a asp-area="Admin" asp-controller="Category" asp-action="Index"
                            class="btn btn-outline-dark flex-fill">
                         <i class="fa-solid fa-arrow-left fa-sm me-2"></i>Back
                     </a>

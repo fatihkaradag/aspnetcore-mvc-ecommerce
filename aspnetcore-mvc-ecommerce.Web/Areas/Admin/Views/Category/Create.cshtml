@@ -1,13 +1,13 @@
 ﻿@model Category
 
-<form method="post" asp-action="Edit" asp-route-id="@Model.Id">
+<form method="post">
 
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Category" asp-action="Index">Categories</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            <li class="breadcrumb-item"><a asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create</li>
         </ol>
     </nav>
 
@@ -16,12 +16,9 @@
         <span class="section-label">New Entry</span>
         <hr class="section-divider my-0">
     </div>
-    <h1 class="section-title mb-5">Edit Category</h1>
+    <h1 class="section-title mb-5">Create Category</h1>
 
     <!-- Form Card -->
-
-    <input asp-for="Id" hidden />
-
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card px-4 py-5 px-md-5">
@@ -49,12 +46,12 @@
 
                 <!-- Actions -->
                 <div class="d-flex gap-3">
-                    <a asp-controller="Category" asp-action="Index"
+                    <a asp-area="Admin" asp-controller="Category" asp-action="Index"
                            class="btn btn-outline-dark flex-fill">
                         <i class="fa-solid fa-arrow-left fa-sm me-2"></i>Back
                     </a>
                     <button type="submit" class="btn btn-primary flex-fill">
-                        Update Category<i class="fa-solid fa-arrow-right fa-sm ms-2"></i>
+                        Create Category<i class="fa-solid fa-arrow-right fa-sm ms-2"></i>
                     </button>
                 </div>
 

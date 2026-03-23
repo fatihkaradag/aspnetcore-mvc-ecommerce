@@ -2,9 +2,10 @@
 using aspnetcore_mvc_ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace aspnetcore_mvc_ecommerce.Web.Controllers
+namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 {
     // Handles all HTTP requests related to Category management
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

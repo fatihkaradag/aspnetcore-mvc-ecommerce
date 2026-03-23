@@ -2,8 +2,9 @@ using aspnetcore_mvc_ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace aspnetcore_mvc_ecommerce.Web.Controllers
+namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         public IActionResult Index()

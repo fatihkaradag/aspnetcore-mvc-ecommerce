@@ -21,7 +21,7 @@
             <div class="container">
 
                 <!-- Brand -->
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <a class="navbar-brand" asp-area="Customer" asp-controller="Home" asp-action="Index">
                     MVC<span style="color:var(--color-accent)">.</span>ECOMMERCE
                 </a>
 
@@ -40,22 +40,41 @@
                     <ul class="navbar-nav align-items-lg-center gap-lg-1">
 
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">
                                 Home
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Category" asp-action="Index">
-                                Categories
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">
                                 Privacy
                             </a>
                         </li>
+
+                        <!-- Admin Area Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#"
+                                   role="button" data-bs-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end text-light">
+                                <li>
+                                    <span class="dropdown-item-text"
+                                          style="font-family:var(--font-condensed);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);padding:0.4rem 1rem 0.2rem;">
+                                        Admin Area
+                                    </span>
+                                </li>
+                                <li>
+                                    <!-- Link to Category management in Admin area -->
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                        <i class="fa-solid fa-tag fa-fw me-2" style="color:var(--color-muted);"></i>Categories
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                            </ul>
+                        </li>
+
 
                         <!-- Divider (desktop only) -->
                         <li class="nav-item d-none d-lg-block">
@@ -86,12 +105,12 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <span class="dropdown-item-text" style="font-family:var(--font-condensed);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);padding:0.4rem 1rem 0.2rem;">
+                                    <span class="dropdown-item-text text-light" style="font-family:var(--font-condensed);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);padding:0.4rem 1rem 0.2rem;">
                                         Signed in as
                                     </span>
                                 </li>
                                 <li>
-                                    <span class="dropdown-item-text" style="font-family:var(--font-condensed);font-weight:700;font-size:0.82rem;letter-spacing:0.06em;color:var(--color-white);padding:0 1rem 0.5rem;">
+                                    <span class="dropdown-item-text text-light" style="font-family:var(--font-condensed);font-weight:700;font-size:0.82rem;letter-spacing:0.06em;color:var(--color-white);padding:0 1rem 0.5rem;">
                                         Username
                                     </span>
                                 </li>
