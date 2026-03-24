@@ -130,86 +130,86 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            Author = "F. Scott Fitzgerald",
+                            Author = "Eleanor Voss",
                             CategoryId = 1,
-                            Description = "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan, set in the Jazz Age on Long Island.",
-                            ISBN = "9780743273565",
+                            Description = "A gripping tale of a young woman who discovers a hidden world beneath the streets of a crumbling city, where secrets of the past threaten to unravel everything she has ever known.",
+                            ISBN = "9781234560001",
                             ImageUrl = "",
                             ListPrice = 29.0,
                             Price = 24.0,
                             Price100 = 17.0,
                             Price50 = 20.0,
-                            Title = "The Great Gatsby"
+                            Title = "The Crimson Horizon"
                         },
                         new
                         {
                             Id = 2,
-                            Author = "Yuval Noah Harari",
+                            Author = "Marcus J. Aldren",
                             CategoryId = 2,
-                            Description = "A brief history of humankind, exploring how Homo sapiens came to dominate the Earth and what the future holds for our species.",
-                            ISBN = "9780062316097",
+                            Description = "A fascinating journey through the rise of civilizations, exploring how culture, cooperation, and conflict shaped the modern world and what it truly means to be human.",
+                            ISBN = "9781234560002",
                             ImageUrl = "",
                             ListPrice = 35.0,
                             Price = 30.0,
                             Price100 = 22.0,
                             Price50 = 26.0,
-                            Title = "Sapiens"
+                            Title = "The Human Blueprint"
                         },
                         new
                         {
                             Id = 3,
-                            Author = "Stephen Hawking",
+                            Author = "Dr. Lena Hartwell",
                             CategoryId = 3,
-                            Description = "An exploration of cosmology, black holes, and the nature of time written for general audiences by one of the greatest physicists.",
-                            ISBN = "9780553380163",
+                            Description = "An accessible and mind-bending exploration of black holes, quantum mechanics, and the fabric of spacetime, written for curious minds who dare to question the nature of reality.",
+                            ISBN = "9781234560003",
                             ImageUrl = "",
                             ListPrice = 40.0,
                             Price = 35.0,
                             Price100 = 25.0,
                             Price50 = 30.0,
-                            Title = "A Brief History of Time"
+                            Title = "Beyond the Event Horizon"
                         },
                         new
                         {
                             Id = 4,
-                            Author = "Walter Isaacson",
+                            Author = "Sandra K. Mercer",
                             CategoryId = 4,
-                            Description = "The exclusive biography of Steve Jobs, based on more than forty interviews with Jobs conducted over two years.",
-                            ISBN = "9781451648539",
+                            Description = "The untold story of a tech visionary who built an empire from a garage startup, transformed three industries, and redefined what it means to lead with obsession and purpose.",
+                            ISBN = "9781234560004",
                             ImageUrl = "",
                             ListPrice = 45.0,
                             Price = 40.0,
                             Price100 = 30.0,
                             Price50 = 35.0,
-                            Title = "Steve Jobs"
+                            Title = "Wired to Win"
                         },
                         new
                         {
                             Id = 5,
-                            Author = "Antoine de Saint-Exupéry",
+                            Author = "Olivia Trent",
                             CategoryId = 5,
-                            Description = "A poetic tale about a young prince who travels the universe and learns about life, love, and loss.",
-                            ISBN = "9780156012195",
+                            Description = "A magical adventure about a curious little fox named Ziggy who plants seeds among the stars and discovers that friendship and kindness make the whole universe bloom.",
+                            ISBN = "9781234560005",
                             ImageUrl = "",
                             ListPrice = 20.0,
                             Price = 17.0,
                             Price100 = 12.0,
                             Price50 = 14.0,
-                            Title = "The Little Prince"
+                            Title = "Ziggy and the Star Garden"
                         },
                         new
                         {
                             Id = 6,
-                            Author = "George Orwell",
-                            CategoryId = 5,
-                            Description = "A dystopian novel set in a totalitarian society where Big Brother watches your every move and independent thinking is a crime.",
-                            ISBN = "9780451524935",
+                            Author = "Nathan Cross",
+                            CategoryId = 1,
+                            Description = "In a world where every thought is monitored and every word is logged, one programmer stumbles upon a forbidden algorithm that could either free humanity or destroy it forever.",
+                            ISBN = "9781234560006",
                             ImageUrl = "",
                             ListPrice = 25.0,
                             Price = 21.0,
                             Price100 = 15.0,
                             Price50 = 18.0,
-                            Title = "1984"
+                            Title = "The Silent Protocol"
                         });
                 });
 

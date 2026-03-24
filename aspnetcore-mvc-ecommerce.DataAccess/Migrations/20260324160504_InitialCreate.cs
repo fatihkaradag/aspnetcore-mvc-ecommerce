@@ -40,7 +40,8 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                     Price = table.Column<double>(type: "float", nullable: false),
                     Price50 = table.Column<double>(type: "float", nullable: false),
                     Price100 = table.Column<double>(type: "float", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,15 +68,15 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "Author", "CategoryId", "Description", "ISBN", "ListPrice", "Price", "Price100", "Price50", "Title" },
+                columns: new[] { "Id", "Author", "CategoryId", "Description", "ISBN", "ImageUrl", "ListPrice", "Price", "Price100", "Price50", "Title" },
                 values: new object[,]
                 {
-                    { 1, "F. Scott Fitzgerald", 1, "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan, set in the Jazz Age on Long Island.", "9780743273565", 29.0, 24.0, 17.0, 20.0, "The Great Gatsby" },
-                    { 2, "Yuval Noah Harari", 2, "A brief history of humankind, exploring how Homo sapiens came to dominate the Earth and what the future holds for our species.", "9780062316097", 35.0, 30.0, 22.0, 26.0, "Sapiens" },
-                    { 3, "Stephen Hawking", 3, "An exploration of cosmology, black holes, and the nature of time written for general audiences by one of the greatest physicists.", "9780553380163", 40.0, 35.0, 25.0, 30.0, "A Brief History of Time" },
-                    { 4, "Walter Isaacson", 4, "The exclusive biography of Steve Jobs, based on more than forty interviews with Jobs conducted over two years.", "9781451648539", 45.0, 40.0, 30.0, 35.0, "Steve Jobs" },
-                    { 5, "Antoine de Saint-Exupéry", 5, "A poetic tale about a young prince who travels the universe and learns about life, love, and loss.", "9780156012195", 20.0, 17.0, 12.0, 14.0, "The Little Prince" },
-                    { 6, "George Orwell", 5, "A dystopian novel set in a totalitarian society where Big Brother watches your every move and independent thinking is a crime.", "9780451524935", 25.0, 21.0, 15.0, 18.0, "1984" }
+                    { 1, "Eleanor Voss", 1, "A gripping tale of a young woman who discovers a hidden world beneath the streets of a crumbling city, where secrets of the past threaten to unravel everything she has ever known.", "9781234560001", "", 29.0, 24.0, 17.0, 20.0, "The Crimson Horizon" },
+                    { 2, "Marcus J. Aldren", 2, "A fascinating journey through the rise of civilizations, exploring how culture, cooperation, and conflict shaped the modern world and what it truly means to be human.", "9781234560002", "", 35.0, 30.0, 22.0, 26.0, "The Human Blueprint" },
+                    { 3, "Dr. Lena Hartwell", 3, "An accessible and mind-bending exploration of black holes, quantum mechanics, and the fabric of spacetime, written for curious minds who dare to question the nature of reality.", "9781234560003", "", 40.0, 35.0, 25.0, 30.0, "Beyond the Event Horizon" },
+                    { 4, "Sandra K. Mercer", 4, "The untold story of a tech visionary who built an empire from a garage startup, transformed three industries, and redefined what it means to lead with obsession and purpose.", "9781234560004", "", 45.0, 40.0, 30.0, 35.0, "Wired to Win" },
+                    { 5, "Olivia Trent", 5, "A magical adventure about a curious little fox named Ziggy who plants seeds among the stars and discovers that friendship and kindness make the whole universe bloom.", "9781234560005", "", 20.0, 17.0, 12.0, 14.0, "Ziggy and the Star Garden" },
+                    { 6, "Nathan Cross", 1, "In a world where every thought is monitored and every word is logged, one programmer stumbles upon a forbidden algorithm that could either free humanity or destroy it forever.", "9781234560006", "", 25.0, 21.0, 15.0, 18.0, "The Silent Protocol" }
                 });
 
             migrationBuilder.CreateIndex(

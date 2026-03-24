@@ -13,6 +13,7 @@
 
     <!-- Hidden field sends product Id with the form POST — 0 means create, non-zero means update -->
     <input asp-for="Product.Id" hidden />
+    <input asp-for="Product.ImageUrl" hidden/>
 
     <!-- Page Header — dynamically shows Create or Update -->
     <div class="d-flex align-items-baseline gap-3 mb-4">
@@ -21,9 +22,11 @@
     </div>
     <h1 class="section-title mb-5">@(Model.Product.Id != 0 ? "Update Product" : "Create Product")</h1>
 
-    <!-- Form Card -->
-    <div class="row justify-content-center">
-        <div class="col-12">
+    <!-- Two-column layout — form fields on left, image preview on right -->
+    <div class="row g-4">
+
+        <!-- Left Column — Form Fields -->
+        <div class="col-12 col-lg-8">
             <div class="card px-4 py-5 px-md-5">
 
                 <!-- Title -->
@@ -33,10 +36,11 @@
                     <span asp-validation-for="Product.Title" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
                 </div>
 
-                <!-- Description -->
+                <!-- Description — uses TinyMCE rich text editor -->
                 <div class="mb-4">
                     <label asp-for="Product.Description" class="form-label"></label>
                     <textarea asp-for="Product.Description" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
                 </div>
 
                 <!-- Author -->
@@ -60,12 +64,6 @@
                         <option disabled selected value="">-- Select Category --</option>
                     </select>
                     <span asp-validation-for="Product.CategoryId" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
-                </div>
-
-                <!-- Product Image Upload — accepts image files only -->
-                <div class="mb-4">
-                    <label asp-for="Product.ImageUrl" class="form-label mt-2"></label>
-                    <input type="file" name="file" class="form-control border-0 shadow" accept="image/*" />
                 </div>
 
                 <!-- Price fields in a responsive grid -->
@@ -117,27 +115,67 @@
 
             </div>
         </div>
+
+        <!-- Right Column — Image Upload and Preview -->
+        <div class="col-12 col-lg-4">
+            <div class="card px-4 py-5 px-md-4 h-100">
+
+                <!-- Product Image Upload — accepts image files only -->
+                <div class="mb-3">
+                    <label asp-for="Product.ImageUrl" class="form-label"></label>
+                    <input type="file" name="file" class="form-control border-0 shadow" accept="image/*" />
+                </div>
+
+                <!-- Image preview — shows existing image in edit mode -->
+                @if (Model.Product.Id != 0 && !string.IsNullOrEmpty(Model.Product.ImageUrl))
+                {
+                    <div class="mt-3">
+                        <p class="text-muted mb-2" style="font-size:0.75rem;font-family:var(--font-condensed);letter-spacing:0.08em;">
+                            Current Image
+                        </p>
+                        <!-- Displays the current product image -->
+                        <img src="@Model.Product.ImageUrl"
+                             alt="@Model.Product.Title"
+                             class="img-fluid rounded"
+                             style="width:100%; object-fit:cover;" />
+                    </div>
+                }
+                else
+                {
+                    <!-- Placeholder shown when no image is available -->
+                    <div class="mt-3 d-flex align-items-center justify-content-center rounded"
+                         style="width:100%; object-fit:contain;  background:var(--color-mid);">
+                        <div class="text-center" style="color:var(--color-muted);">
+                            <i class="fa-solid fa-image fa-2x mb-2"></i>
+                            <p class="mb-0" style="font-size:0.75rem;font-family:var(--font-condensed);letter-spacing:0.08em;">
+                                No image uploaded
+                            </p>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+
     </div>
 
 </form>
 
 @section Scripts {
+    @* Initializes TinyMCE rich text editor for description textarea *@
     <script>
-        @* Loads client-side validation scripts *@
-
         tinymce.init({
-          selector: 'textarea',
-          plugins: [
-            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons',
-            'link', 'lists', 'media', 'searchreplace', 'table',
-            'visualblocks', 'wordcount'
-          ],
-          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-          uploadcare_public_key: '52578f37f4ae41aa1951',
+            selector: 'textarea',
+            plugins: [
+                'anchor', 'autolink', 'charmap', 'codesample', 'emoticons',
+                'link', 'lists', 'media', 'searchreplace', 'table',
+                'visualblocks', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            uploadcare_public_key: '52578f37f4ae41aa1951',
         });
-
     </script>
-    
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

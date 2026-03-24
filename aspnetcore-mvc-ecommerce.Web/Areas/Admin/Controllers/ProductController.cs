@@ -11,11 +11,13 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _hostEnvironment;
         private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IUnitOfWork unitOfWork, ILogger<ProductController> logger)
+        public ProductController(IUnitOfWork unitOfWork,IWebHostEnvironment webHostEnvironment, ILogger<ProductController> logger)
         {
             _unitOfWork = unitOfWork;
+            _hostEnvironment = webHostEnvironment;
             _logger = logger;
         }
 
@@ -65,6 +67,41 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+
+                // Handles image upload if a new file is provided
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(wwwRootPath, "images", "products");
+                    var extension = Path.GetExtension(file.FileName);
+                    string filePath = Path.Combine(uploads, fileName + extension);
+
+                    // If the uploads directory doesn't exist, create it
+                    if (!Directory.Exists(uploads))
+                    {
+                        Directory.CreateDirectory(uploads);
+                    }
+
+                    // Delete old image if one already exists — runs for both create and update
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    {
+                        string oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    // Save new image file to wwwroot/images/products
+                    await using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+                    productVM.Product.ImageUrl = @"\images\products\" + fileName + extension;
+                }
+
                 if (productVM.Product.Id == 0)
                 {
                     // Create mode — add new product to database
@@ -73,21 +110,8 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    // Edit mode — fetch and update existing product
-                    Product? existing = await _unitOfWork.Product.GetAsync(u => u.Id == productVM.Product.Id);
-                    if (existing == null) return NotFound();
-
-                    // Copy new values into tracked entity to avoid EF Core tracking conflict
-                    existing.Title = productVM.Product.Title;
-                    existing.Description = productVM.Product.Description;
-                    existing.Author = productVM.Product.Author;
-                    existing.ISBN = productVM.Product.ISBN;
-                    existing.ListPrice = productVM.Product.ListPrice;
-                    existing.Price = productVM.Product.Price;
-                    existing.Price50 = productVM.Product.Price50;
-                    existing.Price100 = productVM.Product.Price100;
-                    existing.CategoryId = productVM.Product.CategoryId;
-
+                    // Edit mode — update existing product in database
+                    _unitOfWork.Product.Update(productVM.Product);
                     TempData["success"] = "Product updated successfully.";
                 }
 

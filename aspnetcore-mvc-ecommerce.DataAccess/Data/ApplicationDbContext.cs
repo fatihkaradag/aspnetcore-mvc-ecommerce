@@ -26,14 +26,14 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Data
             );
 
             modelBuilder.Entity<Product>().HasData(
-                // Seed data for initial products
+                // Seed data for initial products (fully fictional)
                 new Product
                 {
                     Id = 1,
-                    Title = "The Great Gatsby",
-                    Author = "F. Scott Fitzgerald",
-                    Description = "A story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan, set in the Jazz Age on Long Island.",
-                    ISBN = "9780743273565",
+                    Title = "The Crimson Horizon",
+                    Author = "Eleanor Voss",
+                    Description = "A gripping tale of a young woman who discovers a hidden world beneath the streets of a crumbling city, where secrets of the past threaten to unravel everything she has ever known.",
+                    ISBN = "9781234560001",
                     ListPrice = 29,
                     Price = 24,
                     Price50 = 20,
@@ -43,10 +43,10 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Data
                 new Product
                 {
                     Id = 2,
-                    Title = "Sapiens",
-                    Author = "Yuval Noah Harari",
-                    Description = "A brief history of humankind, exploring how Homo sapiens came to dominate the Earth and what the future holds for our species.",
-                    ISBN = "9780062316097",
+                    Title = "The Human Blueprint",
+                    Author = "Marcus J. Aldren",
+                    Description = "A fascinating journey through the rise of civilizations, exploring how culture, cooperation, and conflict shaped the modern world and what it truly means to be human.",
+                    ISBN = "9781234560002",
                     ListPrice = 35,
                     Price = 30,
                     Price50 = 26,
@@ -56,10 +56,10 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Data
                 new Product
                 {
                     Id = 3,
-                    Title = "A Brief History of Time",
-                    Author = "Stephen Hawking",
-                    Description = "An exploration of cosmology, black holes, and the nature of time written for general audiences by one of the greatest physicists.",
-                    ISBN = "9780553380163",
+                    Title = "Beyond the Event Horizon",
+                    Author = "Dr. Lena Hartwell",
+                    Description = "An accessible and mind-bending exploration of black holes, quantum mechanics, and the fabric of spacetime, written for curious minds who dare to question the nature of reality.",
+                    ISBN = "9781234560003",
                     ListPrice = 40,
                     Price = 35,
                     Price50 = 30,
@@ -69,10 +69,10 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Data
                 new Product
                 {
                     Id = 4,
-                    Title = "Steve Jobs",
-                    Author = "Walter Isaacson",
-                    Description = "The exclusive biography of Steve Jobs, based on more than forty interviews with Jobs conducted over two years.",
-                    ISBN = "9781451648539",
+                    Title = "Wired to Win",
+                    Author = "Sandra K. Mercer",
+                    Description = "The untold story of a tech visionary who built an empire from a garage startup, transformed three industries, and redefined what it means to lead with obsession and purpose.",
+                    ISBN = "9781234560004",
                     ListPrice = 45,
                     Price = 40,
                     Price50 = 35,
@@ -82,10 +82,10 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Data
                 new Product
                 {
                     Id = 5,
-                    Title = "The Little Prince",
-                    Author = "Antoine de Saint-Exupéry",
-                    Description = "A poetic tale about a young prince who travels the universe and learns about life, love, and loss.",
-                    ISBN = "9780156012195",
+                    Title = "Ziggy and the Star Garden",
+                    Author = "Olivia Trent",
+                    Description = "A magical adventure about a curious little fox named Ziggy who plants seeds among the stars and discovers that friendship and kindness make the whole universe bloom.",
+                    ISBN = "9781234560005",
                     ListPrice = 20,
                     Price = 17,
                     Price50 = 14,
@@ -95,15 +95,15 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Data
                 new Product
                 {
                     Id = 6,
-                    Title = "1984",
-                    Author = "George Orwell",
-                    Description = "A dystopian novel set in a totalitarian society where Big Brother watches your every move and independent thinking is a crime.",
-                    ISBN = "9780451524935",
+                    Title = "The Silent Protocol",
+                    Author = "Nathan Cross",
+                    Description = "In a world where every thought is monitored and every word is logged, one programmer stumbles upon a forbidden algorithm that could either free humanity or destroy it forever.",
+                    ISBN = "9781234560006",
                     ListPrice = 25,
                     Price = 21,
                     Price50 = 18,
                     Price100 = 15,
-                    CategoryId = 5
+                    CategoryId = 1
                 }
             );
         }
