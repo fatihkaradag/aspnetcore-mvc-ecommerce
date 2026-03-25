@@ -100,7 +100,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("ListPrice")

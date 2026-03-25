@@ -23,7 +23,7 @@
     </div>
 
     <!-- Product list table -->
-    <table class="table table-bordered table-striped">
+    <table id="tblData" "class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
                 <th>Title</th>
@@ -34,25 +34,10 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach (var obj in Model)
-            {
-                <tr>
-                    <td>@obj.Title</td>
-                    <td>@obj.Author</td>
-                    <td>@obj.ISBN</td>
-                    <td>@obj.Category?.Name</td>
-                    <td>@obj.Price</td>
-                    <!-- Edit and Delete action buttons -->
-                    <td>
-                        <div class="btn-group" role="group">
-                            <a asp-area="Admin" asp-controller="Product" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-sm btn-primary mx-2">Edit</a>
-                            <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-sm btn-danger mx-2">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
     </table>
 
 </div>
+
+@section Scripts{
+    <script src="~/js/product.js"></script>
+}

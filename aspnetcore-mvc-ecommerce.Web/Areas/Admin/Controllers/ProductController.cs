@@ -8,13 +8,14 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 {
     // Handles all HTTP requests related to Product management
     [Area("Admin")]
+    // [Authorize(Roles = "Admin")] // Critical: Secure the admin area before production
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IUnitOfWork unitOfWork,IWebHostEnvironment webHostEnvironment, ILogger<ProductController> logger)
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, ILogger<ProductController> logger)
         {
             _unitOfWork = unitOfWork;
             _hostEnvironment = webHostEnvironment;
@@ -24,15 +25,24 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
         // GET: /Product/Index — retrieves and displays all products
         public async Task<IActionResult> Index()
         {
-            // Fetches all products asynchronously via repository including category info
-            IEnumerable<Product> objProductList = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category");
-            return View(objProductList.ToList());
+            try
+            {
+                // Fetches all products asynchronously including category navigation property
+                IEnumerable<Product> objProductList = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category");
+                return View(objProductList.ToList());
+            }
+            catch (Exception ex)
+            {
+                // Logs error and returns 500 if product list cannot be fetched
+                _logger.LogError(ex, "Error occurred while fetching products for Index.");
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // GET: /Product/Upsert — returns create form if id is null, edit form if id exists
         public async Task<IActionResult> Upsert(int? id)
         {
-            // Builds the ViewModel with category dropdown
+            // Builds the ViewModel with empty product and category dropdown
             ProductVM productVM = new()
             {
                 Product = new Product(),
@@ -77,13 +87,13 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
                     var extension = Path.GetExtension(file.FileName);
                     string filePath = Path.Combine(uploads, fileName + extension);
 
-                    // If the uploads directory doesn't exist, create it
+                    // Creates upload directory if it does not exist
                     if (!Directory.Exists(uploads))
                     {
                         Directory.CreateDirectory(uploads);
                     }
 
-                    // Delete old image if one already exists — runs for both create and update
+                    // Deletes old image file if one already exists
                     if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
                     {
                         string oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
@@ -93,7 +103,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
                         }
                     }
 
-                    // Save new image file to wwwroot/images/products
+                    // Saves new image file asynchronously to wwwroot/images/products
                     await using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
@@ -104,13 +114,13 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 
                 if (productVM.Product.Id == 0)
                 {
-                    // Create mode — add new product to database
+                    // Create mode — adds new product to database
                     _unitOfWork.Product.Add(productVM.Product);
                     TempData["success"] = "Product created successfully.";
                 }
                 else
                 {
-                    // Edit mode — update existing product in database
+                    // Edit mode — updates existing product in database
                     _unitOfWork.Product.Update(productVM.Product);
                     TempData["success"] = "Product updated successfully.";
                 }
@@ -143,7 +153,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
             return View(productFromDb);
         }
 
-        // POST: /Product/Delete — removes the product from the database
+        // POST: /Product/Delete — removes the product and its image from the database
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletePOST(int? id)
@@ -155,6 +165,16 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
             Product? obj = await _unitOfWork.Product.GetAsync(u => u.Id == id);
             if (obj == null) return NotFound();
 
+            // Deletes the physical image file if it exists
+            if (!string.IsNullOrEmpty(obj.ImageUrl))
+            {
+                string oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
             // Removes product via repository and persists changes
             _unitOfWork.Product.Remove(obj);
             await _unitOfWork.SaveAsync();
@@ -162,5 +182,42 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
+
+        #region API CALLS
+
+        // GET: /Product/GetAll — returns all products as JSON for DataTable API calls
+        public async Task<IActionResult> GetAll()
+        {
+            // Retrieves all products with category info and returns as JSON
+            IEnumerable<Product> objProductList = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category");
+            return Json(new { data = objProductList });
+        }
+
+        // DELETE: /Product/DeleteAjax — removes product and image via AJAX call
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAjax(int? id)
+        {
+            // Fetches product before deletion to access its image path
+            var productToBeDeleted = await _unitOfWork.Product.GetAsync(u => u.Id == id);
+            if (productToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+
+            // Deletes the physical image file if it exists
+            if (!string.IsNullOrEmpty(productToBeDeleted.ImageUrl))
+            {
+                var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, productToBeDeleted.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath)) System.IO.File.Delete(oldImagePath);
+            }
+
+            // Removes product and persists changes
+            _unitOfWork.Product.Remove(productToBeDeleted);
+            await _unitOfWork.SaveAsync();
+
+            return Json(new { success = true, message = "Delete Successful" });
+        }
+
+        #endregion
     }
 }

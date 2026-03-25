@@ -11,7 +11,7 @@ using aspnetcore_mvc_ecommerce.DataAccess.Data;
 namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260324160504_InitialCreate")]
+    [Migration("20260324224558_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -103,7 +103,6 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("ListPrice")

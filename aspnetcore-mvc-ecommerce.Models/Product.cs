@@ -71,6 +71,6 @@ namespace aspnetcore_mvc_ecommerce.Models
 
         // URL of the product image — nullable field
         [ValidateNever] // Skip validation for this property as it's optional
-        public string ImageUrl { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; } = string.Empty;
     }
 }
