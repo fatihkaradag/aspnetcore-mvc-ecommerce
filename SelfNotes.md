@@ -16,6 +16,7 @@ Tools > Nuget Package Manager > Package Manager Console
 ## When default
 ```bash
 # 1. First delete all migration folder (Migrations folder)
+Update-Database
 
 # 2. Package Manager Console:
 Add-Migration InitialCreate

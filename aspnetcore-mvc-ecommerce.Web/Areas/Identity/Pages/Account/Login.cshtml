@@ -1,0 +1,83 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Welcome Back, Reader";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 shadow-lg rounded-4 overflow-hidden bg-white d-flex flex-wrap p-0">
+            
+            <div class="col-12 col-md-6 p-5">
+                <div class="mb-4">
+                    <h1 class="h3 fw-bold text-dark">@ViewData["Title"]</h1>
+                    <p class="text-muted small">Enter your credentials to access your library.</p>
+                </div>
+
+                <form id="account" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small" role="alert"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Email" class="form-control border-0 border-bottom rounded-0" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="Input.Email" class="text-muted"><i class="fa-solid fa-user me-2"></i>Email Address</label>
+                        <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password" class="form-control border-0 border-bottom rounded-0" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <label asp-for="Input.Password" class="text-muted"><i class="fa-solid fa-key me-2"></i>Password</label>
+                        <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            <label class="form-check-label text-muted small" asp-for="Input.RememberMe">
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                        <a id="forgot-password" asp-page="./ForgotPassword" class="text-primary small text-decoration-none">Forgot password?</a>
+                    </div>
+
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary rounded-pill shadow-sm py-3 fw-bold text-uppercase mb-3">
+                        Sign In <i class="fa-solid fa-right-to-bracket ms-2"></i>
+                    </button>
+
+                    <div class="text-center">
+                        <p class="text-muted small">
+                            New to our bookstore?
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-primary fw-bold text-decoration-none">Join Now</a>
+                        </p>
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="text-muted text-decoration-none x-small mt-2 d-block">Resend email confirmation</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-12 col-md-6 bg-light d-none d-md-flex align-items-center justify-content-center border-start p-5"
+                 style="background: #f8f9fa url('/images/login-bg-pattern.png');">
+                <div class="text-center">
+                    <div class="mb-4">
+                        <i class="fa-solid fa-bookmark fa-4x text-primary opacity-25"></i>
+                    </div>
+                    <h4 class="fw-bold">Don't lose your place.</h4>
+                    <p class="text-muted small px-4">Log in to sync your wishlist across devices and see your reading history.</p>
+                    
+                    <hr class="w-25 mx-auto my-4" />
+                    
+                    <div class="d-grid gap-2">
+                        <p class="text-muted x-small mb-0">Security Tip:</p>
+                        <span class="badge bg-white text-dark border fw-normal py-2 px-3 rounded-pill shadow-xs mx-auto">
+                            <i class="fa-solid fa-shield-halved text-success me-1"></i> SSL Protected Connection
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white mb-4 shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Total Products</h5>
+                    <p class="display-4 text-white">@ViewBag.ProductCount</p>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between small">
+                    <a class="text-white stretched-link" asp-controller="Product" asp-action="Index">View Products</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white mb-4 shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Categories</h5>
+                    <p class="display-4 text-white">@ViewBag.CategoryCount</p>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between small">
+                    <a class="text-white stretched-link" asp-controller="Category" asp-action="Index">Manage Categories</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

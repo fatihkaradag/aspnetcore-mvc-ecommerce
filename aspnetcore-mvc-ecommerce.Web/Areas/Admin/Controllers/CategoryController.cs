@@ -1,11 +1,13 @@
 ﻿using aspnetcore_mvc_ecommerce.DataAccess.Repository.IRepository;
 using aspnetcore_mvc_ecommerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 {
     // Handles all HTTP requests related to Category management
     [Area("Admin")]
+    [Authorize(Roles = "Admin")] // Restrict access to admin users only
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

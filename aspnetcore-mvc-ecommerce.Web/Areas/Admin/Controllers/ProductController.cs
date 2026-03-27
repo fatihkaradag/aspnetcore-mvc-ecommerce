@@ -1,6 +1,7 @@
 ﻿using aspnetcore_mvc_ecommerce.DataAccess.Repository.IRepository;
 using aspnetcore_mvc_ecommerce.Models;
 using aspnetcore_mvc_ecommerce.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -8,7 +9,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 {
     // Handles all HTTP requests related to Product management
     [Area("Admin")]
-    // [Authorize(Roles = "Admin")] // Critical: Secure the admin area before production
+    [Authorize(Roles = "Admin")] // Restrict access to admin users only
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

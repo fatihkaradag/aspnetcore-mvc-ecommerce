@@ -3,7 +3,7 @@
 <!-- Breadcrumb navigation — dynamically shows Create or Update based on product Id -->
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Panel</a></li>
         <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a></li>
         <li class="breadcrumb-item active" aria-current="page">@(Model.Product.Id != 0 ? "Update" : "Create")</li>
     </ol>

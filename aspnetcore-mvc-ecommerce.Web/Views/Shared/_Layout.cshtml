@@ -61,36 +61,7 @@
                             </a>
                         </li>
 
-                        <!-- Admin Area Dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#"
-                                   role="button" data-bs-toggle="dropdown"
-                                   aria-haspopup="true" aria-expanded="false">
-                                <i class="fa-solid fa-screwdriver-wrench fa-xs me-1"
-                                   style="color:var(--c-accent);"></i>Admin
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <span class="dropdown-item-text"
-                                          style="font-size:0.68rem;letter-spacing:0.1em;
-                                        text-transform:uppercase;color:var(--c-tan);
-                                        padding:0.45rem 1rem 0.15rem;font-weight:600;">
-                                        Admin Area
-                                    </span>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
-                                        <i class="fa-solid fa-tag fa-fw me-2" style="color:var(--c-tan);"></i>Categories
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">
-                                        <i class="fa-solid fa-tag fa-fw me-2" style="color:var(--c-tan);"></i>Products
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                            </ul>
-                        </li>
+                       
 
                         <!-- Divider (desktop only) -->
                         <li class="nav-item d-none d-lg-flex align-items-center">
@@ -130,70 +101,9 @@
                             </a>
                         </li>
 
-                        <!-- User dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
-                                   data-bs-toggle="dropdown" href="#"
-                                   role="button" aria-haspopup="true" aria-expanded="false"
-                                   style="padding-left:0.4rem !important;">
-                                <span class="d-flex align-items-center justify-content-center"
-                                      style="width:30px;height:30px;border-radius:50%;
-                                    background:var(--c-parchment);
-                                    border:1.5px solid var(--c-border-dk);
-                                    font-size:0.75rem;color:var(--c-brown);">
-                                    <i class="fa-regular fa-user"></i>
-                                </span>
-                                <span class="d-none d-lg-inline"
-                                      style="font-size:0.8rem;color:var(--c-brown);font-weight:500;">
-                                    Username
-                                </span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <span class="dropdown-item-text"
-                                          style="font-size:0.72rem;color:var(--c-tan);
-                                        font-style:italic;padding:0.5rem 1rem 0.1rem;">
-                                        Hello,
-                                    </span>
-                                </li>
-                                <li>
-                                    <span class="dropdown-item-text"
-                                          style="font-family:var(--font-serif);font-weight:600;
-                                        font-size:0.9rem;color:var(--c-ink);
-                                        padding:0 1rem 0.5rem;">
-                                        Username
-                                    </span>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fa-regular fa-user fa-fw me-2" style="color:var(--c-tan);"></i>Profile
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fa-regular fa-heart fa-fw me-2" style="color:var(--c-tan);"></i>Wishlist
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fa-regular fa-clock fa-fw me-2" style="color:var(--c-tan);"></i>Orders
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
-                                        <i class="fa-solid fa-sliders fa-fw me-2" style="color:var(--c-tan);"></i>Admin Panel
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="#"
-                                           style="color:var(--c-danger) !important;">
-                                        <i class="fa-solid fa-arrow-right-from-bracket fa-fw me-2"></i>Logout
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+
+                        <partial name="_LoginPartial"/>
+
 
                     </ul>
                 </div>
