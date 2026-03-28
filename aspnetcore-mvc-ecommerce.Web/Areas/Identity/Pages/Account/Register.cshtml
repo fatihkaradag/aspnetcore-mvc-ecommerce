@@ -8,15 +8,26 @@
 
     <!-- Delete Production -->
     <div class="alert alert-info d-flex flex-wrap gap-2 justify-content-center mb-4 border-0 shadow-sm rounded-4">
-        <div class="w-100 text-center mb-1"><small class="fw-bold text-uppercase" style="font-size: 0.7rem;">Developer Area (Delete Production)</small></div>
+        <div class="w-100 text-center mb-1">
+            <small class="fw-bold text-uppercase text-muted" style="font-size: 0.7rem;">
+                <i class="fa-solid fa-code me-1"></i> Developer QuickFill (Remove in Production)
+            </small>
+        </div>
+        
         <button type="button" class="btn btn-sm btn-dark rounded-pill px-3" onclick="quickFill('admin@example.com', 'Admin123!', 'Admin')">
             <i class="fa-solid fa-user-shield me-1"></i> Admin
         </button>
-        <button type="button" class="btn btn-sm btn-secondary rounded-pill px-3" onclick="quickFill('test@example.com', 'Test123!', 'Individual')">
-            <i class="fa-solid fa-user me-1"></i> Customer
+        
+        <button type="button" class="btn btn-sm btn-info text-white rounded-pill px-3" onclick="quickFill('employee@example.com', 'Employee123!', 'Employee')">
+            <i class="fa-solid fa-user-tie me-1"></i> Employee
         </button>
+
         <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="quickFill('company@example.com', 'Company123!', 'Company')">
             <i class="fa-solid fa-building me-1"></i> Company
+        </button>
+
+        <button type="button" class="btn btn-sm btn-secondary rounded-pill px-3" onclick="quickFill('test@example.com', 'Test123!', 'Customer')">
+            <i class="fa-solid fa-user me-1"></i> Customer
         </button>
     </div>
 
@@ -160,25 +171,25 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         function quickFill(email, pass, role) {
+            $('#Input_Name').val(role + " User");
+            $('#Input_Email').val(email);
+            $('#Input_Password').val(pass);
+            $('#Input_ConfirmPassword').val(pass);
 
-                    $('#Input_Name').val(role + " User");
-                    $('#Input_Email').val(email);
-                    $('#Input_Password').val(pass);
-                    $('#Input_ConfirmPassword').val(pass);
-        
+            $('#Input_StreetAddress').val("123 Tech Avenue");
+            $('#Input_City').val("Istanbul");
+            $('#Input_State').val("TR");
+            $('#Input_PostalCode').val("34000");
+            $('#Input_PhoneNumber').val("5551112233");
 
-                    $('#Input_StreetAddress').val("123 Test St");
-                    $('#Input_City').val("New York");
-                    $('#Input_State').val("US");
-                    $('#Input_PostalCode').val("34000");
-                    $('#Input_PhoneNumber').val("5554443322");
+            $('#Input_Role').val(role).change();
 
-                    $('#Input_Role').val(role).change();
-
-                    if(role === 'Company') {
-                        $('#Input_CompanyId option:eq(1)').prop('selected', true);
-                    }
-                }
+            if (role === 'Company') {
+                setTimeout(function() {
+                    $('#Input_CompanyId option:eq(1)').prop('selected', true);
+                }, 100);
+            }
+        }
 
         $(document).ready(function() {
 
