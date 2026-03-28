@@ -5,6 +5,21 @@
 }
 
 <div class="container mt-5 mb-5">
+
+    <!-- Delete Production -->
+    <div class="alert alert-info d-flex flex-wrap gap-2 justify-content-center mb-4 border-0 shadow-sm rounded-4">
+        <div class="w-100 text-center mb-1"><small class="fw-bold text-uppercase" style="font-size: 0.7rem;">Developer Area (Delete Production)</small></div>
+        <button type="button" class="btn btn-sm btn-dark rounded-pill px-3" onclick="quickFill('admin@example.com', 'Admin123!', 'Admin')">
+            <i class="fa-solid fa-user-shield me-1"></i> Admin
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary rounded-pill px-3" onclick="quickFill('test@example.com', 'Test123!', 'Individual')">
+            <i class="fa-solid fa-user me-1"></i> Customer
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="quickFill('company@example.com', 'Company123!', 'Company')">
+            <i class="fa-solid fa-building me-1"></i> Company
+        </button>
+    </div>
+
     <div class="row justify-content-center shadow-lg rounded-4 overflow-hidden bg-white">
         
         <div class="col-lg-4 d-none d-lg-flex bg-primary align-items-center justify-content-center text-white p-5"
@@ -95,15 +110,21 @@
                     </div>
                 </div>
 
-                @if (User.IsInRole("Admin"))
-                {
+                <!-- @if (User.IsInRole("Admin")){} -->
                     <div class="mb-4 mt-2">
-                        <label class="small text-muted mb-1">System Role (Admin Only)</label>
+                        <label class="small text-muted mb-1">System Role</label>
                         <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select border-0 border-bottom rounded-0 bg-light">
                             <option disabled selected value="">-- Select Role --</option>
                         </select>
                     </div>
-                }
+
+                    <div class="mb-4 mt-2 companyDiv">
+                        <label class="small text-muted mb-1">Company List</label>
+                        <select asp-for="Input.CompanyId" style="display:none;" asp-items="@Model.Input.CompanyList" class="form-select border-0 border-bottom rounded-0 bg-light">
+                            <option disabled selected value="">-- Select Company --</option>
+                        </select>
+                    </div>
+                
 
                 <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary rounded-pill shadow-sm mt-4 py-3 fw-bold text-uppercase">
                     Create My Account
@@ -133,6 +154,45 @@
     </div>
 </div>
 
+
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        function quickFill(email, pass, role) {
+
+                    $('#Input_Name').val(role + " User");
+                    $('#Input_Email').val(email);
+                    $('#Input_Password').val(pass);
+                    $('#Input_ConfirmPassword').val(pass);
+        
+
+                    $('#Input_StreetAddress').val("123 Test St");
+                    $('#Input_City').val("New York");
+                    $('#Input_State').val("US");
+                    $('#Input_PostalCode').val("34000");
+                    $('#Input_PhoneNumber').val("5554443322");
+
+                    $('#Input_Role').val(role).change();
+
+                    if(role === 'Company') {
+                        $('#Input_CompanyId option:eq(1)').prop('selected', true);
+                    }
+                }
+
+        $(document).ready(function() {
+
+                
+            function toggleCompanyDropdown() {
+                if ($('#Input_Role').val() === 'Company') {
+                    $('#Input_CompanyId').show();
+                } else {
+                    $('#Input_CompanyId').hide();
+                    $('#Input_CompanyId').val('');
+                }
+            }
+            $('#Input_Role').change(toggleCompanyDropdown);
+            toggleCompanyDropdown();
+        });
+    </script>
 }

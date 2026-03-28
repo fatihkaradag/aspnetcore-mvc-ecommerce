@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 {
-    /// <summary>
-    /// Administrative Dashboard for e-commerce management.
-    /// Provides summaries of products, categories, and potential orders.
-    /// </summary>
+    // Handles the admin dashboard — displays store summary statistics
     [Area("Admin")]
-    [Authorize(Roles = "Admin")] // Restrict access to admin users only
+    [Authorize(Roles = "Admin")] // Restricts access to admin users only
     public class DashboardController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -21,23 +18,20 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Displays the summary of the store status.
-        /// </summary>
+        // GET: /Admin/Dashboard/Index — loads and displays store summary metrics
         public async Task<IActionResult> Index()
         {
             try
             {
-                // In an enterprise app, we calculate summary statistics for the dashboard
-                // Fetch counts asynchronously to ensure the UI remains responsive
-                var productCount = (await _unitOfWork.Product.GetAllAsync()).Count();
-                var categoryCount = (await _unitOfWork.Category.GetAllAsync()).Count();
+                // Fetches counts asynchronously for dashboard stats
+                ViewBag.ProductCount = (await _unitOfWork.Product.GetAllAsync()).Count();
+                ViewBag.CategoryCount = (await _unitOfWork.Category.GetAllAsync()).Count();
+                ViewBag.CompanyCount = (await _unitOfWork.Company.GetAllAsync()).Count();
 
-                // Using ViewBag for simple dashboard stats (In larger apps, use a DashboardVM)
-                ViewBag.ProductCount = productCount;
-                ViewBag.CategoryCount = categoryCount;
+                // TODO: Update when Order module is implemented
+                ViewBag.OrderCount = 0;
 
-                _logger.LogInformation("Dashboard metrics loaded successfully at {Time}", DateTime.Now);
+                _logger.LogInformation("Dashboard metrics loaded successfully at {Time}", DateTime.UtcNow);
 
                 return View();
             }

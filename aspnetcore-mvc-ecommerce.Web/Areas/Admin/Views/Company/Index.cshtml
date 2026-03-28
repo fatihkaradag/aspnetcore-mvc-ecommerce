@@ -1,0 +1,42 @@
+﻿
+<div class="container">
+
+    <!-- Breadcrumb navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Panel</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Companies</li>
+        </ol>
+    </nav>
+
+    <!-- Page header with create button -->
+    <div class="row pt-4 mb-3">
+        <div class="col-6">
+            <h2 class="text-primary">Company List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-area="Admin" asp-controller="Company" asp-action="Upsert" class="btn btn-sm btn-primary">
+                Create New Company
+            </a>
+        </div>
+    </div>
+
+    <!-- Company list table -->
+    <table id="tblData" "class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    </table>
+
+</div>
+
+@section Scripts{
+    <script src="~/js/company.js"></script>
+}

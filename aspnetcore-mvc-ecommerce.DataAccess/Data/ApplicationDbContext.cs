@@ -15,6 +15,8 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Company> Companies { get; set; }
+
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,6 +31,37 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Data
                 new Category { Id = 3, Name = "Science & Technology", DisplayOrder = 3 },
                 new Category { Id = 4, Name = "Biography", DisplayOrder = 4 },
                 new Category { Id = 5, Name = "Children's Books", DisplayOrder = 5 }
+            );
+
+            // --- Seed Data for Companies (Fictional Book Distributors) ---
+            modelBuilder.Entity<Company>().HasData(
+                new Company
+                {
+                    Id = 1,
+                    Name = "Vellum & Ink Publishers",
+                    StreetAddress = "123 Library Lane",
+                    City = "Boston",
+                    State = "MA",
+                    PhoneNumber = "555-0101"
+                },
+                new Company
+                {
+                    Id = 2,
+                    Name = "Global Book Distro",
+                    StreetAddress = "456 Logistics Way",
+                    City = "Chicago",
+                    State = "IL",
+                    PhoneNumber = "555-0202"
+                },
+                new Company
+                {
+                    Id = 3,
+                    Name = "Tech-Read Solutions",
+                    StreetAddress = "789 Innovation Dr",
+                    City = "Seattle",
+                    State = "WA",
+                    PhoneNumber = "555-0303"
+                }
             );
 
             modelBuilder.Entity<Product>().HasData(

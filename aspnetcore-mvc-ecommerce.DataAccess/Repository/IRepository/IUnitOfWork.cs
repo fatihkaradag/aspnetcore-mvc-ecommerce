@@ -6,6 +6,7 @@
         // Exposes repositories for operations
         ICategoryRepository Category { get; }
         IProductRepository Product { get; }
+        ICompanyRepository Company { get; }
 
         // Persists all pending changes to the database synchronously
         void Save();

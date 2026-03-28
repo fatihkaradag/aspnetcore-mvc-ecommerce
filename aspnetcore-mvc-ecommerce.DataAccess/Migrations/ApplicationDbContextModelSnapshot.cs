@@ -282,6 +282,73 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("aspnetcore_mvc_ecommerce.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("State")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("StreetAddress")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Boston",
+                            Name = "Vellum & Ink Publishers",
+                            PhoneNumber = "555-0101",
+                            State = "MA",
+                            StreetAddress = "123 Library Lane"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            City = "Chicago",
+                            Name = "Global Book Distro",
+                            PhoneNumber = "555-0202",
+                            State = "IL",
+                            StreetAddress = "456 Logistics Way"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            City = "Seattle",
+                            Name = "Tech-Read Solutions",
+                            PhoneNumber = "555-0303",
+                            State = "WA",
+                            StreetAddress = "789 Innovation Dr"
+                        });
+                });
+
             modelBuilder.Entity("aspnetcore_mvc_ecommerce.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -427,6 +494,9 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -439,6 +509,8 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
 
                     b.Property<string>("StreetAddress")
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -503,6 +575,15 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("aspnetcore_mvc_ecommerce.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("aspnetcore_mvc_ecommerce.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.Navigation("Company");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,104 @@
+﻿@model Company
+
+<!-- Breadcrumb navigation — dynamically shows Create or Update based on company Id -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Panel</a></li>
+        <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Company" asp-action="Index">Companies</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@(Model.Id != 0 ? "Update" : "Create")</li>
+    </ol>
+</nav>
+
+<form method="post" asp-area="Admin" asp-controller="Company" asp-action="Upsert">
+
+    <!-- Hidden field sends company Id with the form POST — 0 means create, non-zero means update -->
+    <input asp-for="Id" hidden />
+
+    <!-- Page Header — dynamically shows Create or Update -->
+    <div class="d-flex align-items-baseline gap-3 mb-4">
+        <span class="section-label">@(Model.Id != 0 ? "Edit Entry" : "New Entry")</span>
+        <hr class="section-divider my-0">
+    </div>
+    <h1 class="section-title mb-5">@(Model.Id != 0 ? "Update Company" : "Create Company")</h1>
+
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card px-4 py-5 px-md-5">
+
+                <!-- Company Name -->
+                <div class="mb-4">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                </div>
+
+                <!-- Address fields in a responsive grid -->
+                <div class="row mb-4">
+
+                    <!-- Street Address -->
+                    <div class="col-12 col-md-6 mb-3 mb-md-0">
+                        <label asp-for="StreetAddress" class="form-label"></label>
+                        <input asp-for="StreetAddress" class="form-control" />
+                        <span asp-validation-for="StreetAddress" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                    </div>
+
+                    <!-- City -->
+                    <div class="col-12 col-md-6 mb-3 mb-md-0">
+                        <label asp-for="City" class="form-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                    </div>
+
+                </div>
+
+                <div class="row mb-4">
+
+                    <!-- State -->
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <label asp-for="State" class="form-label"></label>
+                        <input asp-for="State" class="form-control" />
+                        <span asp-validation-for="State" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                    </div>
+
+                    <!-- Postal Code -->
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <label asp-for="PostalCode" class="form-label"></label>
+                        <input asp-for="PostalCode" class="form-control" />
+                        <span asp-validation-for="PostalCode" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger" style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;"></span>
+                    </div>
+
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex gap-3">
+                    <!-- Back button navigates to Company list without saving -->
+                    <a asp-area="Admin" asp-controller="Company" asp-action="Index"
+                           class="btn btn-outline-dark flex-fill">
+                        <i class="fa-solid fa-arrow-left fa-sm me-2"></i>Back
+                    </a>
+                    <!-- Submit button label changes based on create or update mode -->
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        @(Model.Id != 0 ? "Update Company" : "Create Company")
+                        <i class="fa-solid fa-arrow-right fa-sm ms-2"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    @* Loads client-side validation scripts *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -12,6 +12,8 @@ A complete, production-ready e-commerce web application built with ASP.NET Core 
 ![3](screenshots/3.png)
 -
 ![4](screenshots/4.png)
+-
+![5](screenshots/5.png)
 
 ## ✨ Features
 
@@ -77,7 +79,15 @@ A complete, production-ready e-commerce web application built with ASP.NET Core 
 
    Open your browser and go to `https://localhost:5001` or `http://localhost:5000`
 
----
+
+4. Refresh Database
+- Delete Database on SQL Management Studio then delete all migration folder in DataAccess
+
+   ```bash
+      Update-Database
+      Add-Migration InitialCreate
+      Update-Database
+   ---
 
 ## 📄 License
 

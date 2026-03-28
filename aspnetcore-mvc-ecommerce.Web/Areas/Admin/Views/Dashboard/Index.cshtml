@@ -2,31 +2,142 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card bg-primary text-white mb-4 shadow">
-                <div class="card-body">
-                    <h5 class="card-title text-white">Total Products</h5>
-                    <p class="display-4 text-white">@ViewBag.ProductCount</p>
+<!-- Dashboard header -->
+<div class="d-flex align-items-baseline gap-3 mb-4">
+    <span class="section-label">Overview</span>
+    <hr class="section-divider my-0">
+</div>
+<h1 class="section-title mb-5">Admin Dashboard</h1>
+
+<!-- Stats cards grid -->
+<div class="row g-4 mb-5">
+
+    <!-- Total Products -->
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span style="font-family:var(--font-condensed);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);">
+                        Total Products
+                    </span>
+                    <!-- Icon representing products -->
+                    <i class="fa-solid fa-book" style="color:var(--color-accent);font-size:1.2rem;"></i>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between small">
-                    <a class="text-white stretched-link" asp-controller="Product" asp-action="Index">View Products</a>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
+                <!-- Product count from ViewBag -->
+                <p class="display-5 fw-bold mb-0">@ViewBag.ProductCount</p>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a asp-area="Admin" asp-controller="Product" asp-action="Index"
+                       style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;">
+                    View Products
+                </a>
+                <i class="fa-solid fa-chevron-right fa-xs"></i>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card bg-success text-white mb-4 shadow">
-                <div class="card-body">
-                    <h5 class="card-title text-white">Categories</h5>
-                    <p class="display-4 text-white">@ViewBag.CategoryCount</p>
+    </div>
+
+    <!-- Total Categories -->
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span style="font-family:var(--font-condensed);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);">
+                        Categories
+                    </span>
+                    <!-- Icon representing categories -->
+                    <i class="fa-solid fa-tags" style="color:var(--color-accent);font-size:1.2rem;"></i>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between small">
-                    <a class="text-white stretched-link" asp-controller="Category" asp-action="Index">Manage Categories</a>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
+                <!-- Category count from ViewBag -->
+                <p class="display-5 fw-bold mb-0">@ViewBag.CategoryCount</p>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a asp-area="Admin" asp-controller="Category" asp-action="Index"
+                       style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;">
+                    Manage Categories
+                </a>
+                <i class="fa-solid fa-chevron-right fa-xs"></i>
             </div>
         </div>
+    </div>
+
+    <!-- Total Companies -->
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span style="font-family:var(--font-condensed);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);">
+                        Companies
+                    </span>
+                    <!-- Icon representing companies -->
+                    <i class="fa-solid fa-building" style="color:var(--color-accent);font-size:1.2rem;"></i>
+                </div>
+                <!-- Company count from ViewBag -->
+                <p class="display-5 fw-bold mb-0">@ViewBag.CompanyCount</p>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a asp-area="Admin" asp-controller="Company" asp-action="Index"
+                       style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;">
+                    Manage Companies
+                </a>
+                <i class="fa-solid fa-chevron-right fa-xs"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Orders -->
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span style="font-family:var(--font-condensed);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-muted);">
+                        Total Orders
+                    </span>
+                    <!-- Icon representing orders -->
+                    <i class="fa-solid fa-bag-shopping" style="color:var(--color-accent);font-size:1.2rem;"></i>
+                </div>
+                <!-- Order count from ViewBag -->
+                <p class="display-5 fw-bold mb-0">@ViewBag.OrderCount</p>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a asp-area="Admin" asp-controller="Order" asp-action="Index"
+                       style="font-size:0.78rem;font-family:var(--font-condensed);letter-spacing:0.05em;">
+                    View Orders
+                </a>
+                <i class="fa-solid fa-chevron-right fa-xs"></i>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Quick Actions -->
+<div class="d-flex align-items-baseline gap-3 mb-4">
+    <span class="section-label">Quick Actions</span>
+    <hr class="section-divider my-0">
+</div>
+
+<div class="row g-3">
+    <!-- Add new product shortcut -->
+    <div class="col-12 col-md-4">
+        <a asp-area="Admin" asp-controller="Product" asp-action="Upsert"
+               class="btn btn-primary w-100 py-3">
+            <i class="fa-solid fa-plus me-2"></i>Add New Book
+        </a>
+    </div>
+
+    <!-- Add new category shortcut -->
+    <div class="col-12 col-md-4">
+        <a asp-area="Admin" asp-controller="Category" asp-action="Create"
+               class="btn btn-outline-dark w-100 py-3">
+            <i class="fa-solid fa-plus me-2"></i>Add New Category
+        </a>
+    </div>
+
+    <!-- Add new company shortcut -->
+    <div class="col-12 col-md-4">
+        <a asp-area="Admin" asp-controller="Company" asp-action="Upsert"
+               class="btn btn-outline-dark w-100 py-3">
+            <i class="fa-solid fa-plus me-2"></i>Add New Company
+        </a>
     </div>
 </div>
