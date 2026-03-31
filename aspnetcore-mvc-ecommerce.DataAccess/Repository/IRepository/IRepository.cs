@@ -6,16 +6,16 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Repository.IRepository
     public interface IRepository<T> where T : class
     {
         // Retrieves all records synchronously, optionally including related entities
-        IEnumerable<T> GetAll(string? includeProperties = null);
+        IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter=null, string? includeProperties = null);
 
         // Retrieves all records asynchronously, optionally including related entities
-        Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null);
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
 
         // Retrieves a single record matching the filter synchronously
-        T? Get(Expression<Func<T, bool>> filter, string? includeProperties = null);
+        T? Get(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false);
 
         // Retrieves a single record matching the filter asynchronously
-        Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = null);
+        Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false);
 
         // Adds a new entity to the database context
         void Add(T entity);

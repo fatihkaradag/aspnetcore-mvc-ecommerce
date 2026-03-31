@@ -3,6 +3,7 @@ using aspnetcore_mvc_ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
 {
@@ -18,22 +19,22 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
+            IEnumerable<Product> productList = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category");
             return View(productList);
         }
 
-        // Action Name Fix: If your link uses 'productId', rename 'id' to 'productId'
-        // or ensure your tag helper uses asp-route-id
+        // GET: /Home/Details — retrieves product by id and returns detail page
         public async Task<IActionResult> Details(int productId)
         {
             if (productId <= 0)
             {
-                _logger.LogWarning("Details requested with invalid ID: {Id}", productId);
+                _logger.LogWarning("Details requested with invalid product ID: {Id}", productId);
                 return NotFound();
             }
 
+            // Fetches product with category info asynchronously via repository
             Product? product = await _unitOfWork.Product.GetAsync(
                 u => u.Id == productId,
                 includeProperties: "Category"
@@ -45,25 +46,57 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            // Wraps product in a ShoppingCart for the detail view
+            ShoppingCart cartItem = new()
+            {
+                Product = product,
+                ProductId = product.Id,
+                Quantity = 1
+            };
+
+            return View(cartItem);
         }
 
+        // POST: /Home/Details — adds product to shopping cart
         [HttpPost]
-        [ValidateAntiForgeryToken] // Security: Prevents CSRF attacks
-        public async Task<IActionResult> Details(Product product)
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(ShoppingCart shoppingCart)
         {
-            // Fix for "ModelState.IsValid should be checked"
-            // We pass the model to the action so it can be validated
+            var claimsIdentity = (ClaimsIdentity)User.Identity!;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            shoppingCart.ApplicationUserId = userId;
+
+
             if (ModelState.IsValid)
             {
-                // Logic for adding to cart goes here
-                _logger.LogInformation("Product {Id} added to cart logic triggered.", product.Id);
+                ShoppingCart? cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(
+                    u => u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId
+                );
+
+                if (cartFromDb != null)
+                {
+                    cartFromDb.Quantity += shoppingCart.Quantity;
+                    _unitOfWork.ShoppingCart.Update(cartFromDb);
+                }
+                else
+                {
+                    _unitOfWork.ShoppingCart.Add(shoppingCart);
+                }
+
+                await _unitOfWork.SaveAsync();
+
+                TempData["success"] = "Cart updated successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
-            // If validation fails, reload the detail view with current data
-            product = await _unitOfWork.Product.GetAsync(u => u.Id == product.Id, includeProperties: "Category");
-            return View(product);
+            shoppingCart.Product = await _unitOfWork.Product.GetAsync(
+                u => u.Id == shoppingCart.ProductId,
+                includeProperties: "Category"
+            );
+
+            return View(shoppingCart);
         }
 
         public IActionResult Privacy()

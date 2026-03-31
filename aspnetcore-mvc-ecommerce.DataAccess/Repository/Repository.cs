@@ -2,6 +2,7 @@
 using aspnetcore_mvc_ecommerce.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using static System.Net.WebRequestMethods;
 
 namespace aspnetcore_mvc_ecommerce.DataAccess.Repository
 {
@@ -26,18 +27,25 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Repository
         }
 
         // Retrieves a single entity synchronously matching the given filter expression
-        public T? Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public T? Get(Expression<Func<T, bool>>? filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
-            query = query.Where(filter);
 
-            // Dynamically include related entities if specified
+            IQueryable<T> query = tracked ? dbSet : dbSet.AsNoTracking();
+
+            // Ensure filter is applied only if provided to prevent potential null reference exceptions
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+
+            // Process include properties with trimming to avoid "property not found" errors due to whitespaces
             if (!string.IsNullOrEmpty(includeProperties))
             {
-                foreach (var property in includeProperties
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries))
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query = query.Include(property);
+                    query = query.Include(includeProp.Trim()); // Added .Trim() for robustness
                 }
             }
 
@@ -45,28 +53,38 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Repository
         }
 
         // Retrieves a single entity asynchronously matching the given filter expression
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>>? filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
-            query = query.Where(filter);
 
-            // Dynamically include related entities if specified
+            IQueryable<T> query = tracked ? dbSet : dbSet.AsNoTracking();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
             if (!string.IsNullOrEmpty(includeProperties))
             {
-                foreach (var property in includeProperties
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries))
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query = query.Include(property);
+                    query = query.Include(includeProp.Trim());
                 }
             }
 
+            // Task-based asynchronous execution to keep the UI/Thread responsive
             return await query.FirstOrDefaultAsync();
         }
 
         // Retrieves all entities synchronously, optionally including related navigation properties
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter,string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
 
             // Dynamically include related entities if specified
             if (!string.IsNullOrEmpty(includeProperties))
@@ -82,9 +100,14 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Repository
         }
 
         // Retrieves all entities asynchronously, optionally including related navigation properties
-        public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter,string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
 
             // Dynamically include related entities if specified
             if (!string.IsNullOrEmpty(includeProperties))

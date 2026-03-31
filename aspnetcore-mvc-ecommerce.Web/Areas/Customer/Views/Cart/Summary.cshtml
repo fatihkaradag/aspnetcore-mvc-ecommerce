@@ -1,0 +1,107 @@
+﻿@{
+    // Tasarımı görmek için geçici Mock Data
+    var mockOrderTotal = 148.00;
+    var mockCartItems = new[] {
+        new { Title = "The Midnight Library", Quantity = 1, Price = 24.00, Author = "Matt Haig" },
+        new { Title = "Project Hail Mary", Quantity = 2, Price = 32.00, Author = "Andy Weir" },
+        new { Title = "The Great Gatsby", Quantity = 1, Price = 60.00, Author = "F. Scott Fitzgerald" }
+    };
+}
+
+<form method="post">
+    <div class="container animate-fade-up">
+        <div class="mb-5 mt-4">
+            <span class="section-label">Final Step</span>
+            <h1 class="section-title">Order <em>Summary</em></h1>
+        </div>
+
+        <div class="card border-0 bg-transparent">
+            <div class="card-header bg-ink text-light py-4 rounded-top border-0">
+                <div class="row px-4 align-items-center">
+                    <div class="col-6">
+                        <h5 class="mb-0 text-white fw-serif italic" style="text-transform: none;">Shipping Details</h5>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a href="#" class="btn btn-outline-light btn-sm tracking-wide">BACK TO CART</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body bg-cream shadow-card py-5">
+                <div class="row px-md-4">
+                    <div class="col-12 col-lg-6 pb-4">
+                        <h4 class="text-brown fw-serif mb-4 border-bottom pb-2">Shipping Information</h4>
+                        
+                        <div class="row my-2">
+                            <div class="col-3 pt-2"><label class="form-label">Full Name</label></div>
+                            <div class="col-9">
+                                <input type="text" class="form-control shadow-xs" placeholder="John Doe" />
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-3 pt-2"><label class="form-label">Phone</label></div>
+                            <div class="col-9">
+                                <input type="text" class="form-control shadow-xs" placeholder="+1 234 567 89 00" />
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-3 pt-2"><label class="form-label">Street</label></div>
+                            <div class="col-9">
+                                <input type="text" class="form-control shadow-xs" placeholder="123 Editorial St." />
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-3 pt-2"><label class="form-label">City</label></div>
+                            <div class="col-9">
+                                <input type="text" class="form-control shadow-xs" placeholder="Istanbul" />
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-3 pt-2"><label class="form-label">Postal Code</label></div>
+                            <div class="col-9">
+                                <input type="text" class="form-control shadow-xs" placeholder="34000" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-5 offset-lg-1">
+                        <h4 class="text-ink fw-serif mb-4 border-bottom pb-2">Order List</h4>
+                        <ul class="list-group mb-3 shadow-xs">
+                            @foreach (var item in mockCartItems)
+                            {
+                                <li class="list-group-item d-flex justify-content-between bg-white py-3 border-muted-warm">
+                                    <div>
+                                        <h6 class="my-0 text-ink fw-bold">@item.Title</h6>
+                                        <small class="text-muted-warm italic">Quantity: @item.Quantity</small>
+                                    </div>
+                                    <span class="text-brown fw-semibold">$@((item.Price * item.Quantity).ToString("F2"))</span>
+                                </li>
+                            }
+                            <li class="list-group-item d-flex justify-content-between bg-parchment py-3">
+                                <strong class="text-ink">Total (USD)</strong>
+                                <strong class="price-sale fs-5">$@mockOrderTotal.ToString("F2")</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-parchment border-top border-muted-warm py-4">
+                <div class="row align-items-center px-md-4">
+                    <div class="col-12 col-md-8">
+                        <p class="text-brown italic mb-0">
+                            <i class="bi bi-truck me-2"></i>
+                            Estimated Arrival:
+                            <strong>@DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</strong>
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-4 text-end">
+                        <button type="button" class="btn btn-warning w-100 py-3 shadow-lift fw-bold tracking-wider text-uppercase">
+                            PLACE ORDER <i class="bi bi-check2-circle ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

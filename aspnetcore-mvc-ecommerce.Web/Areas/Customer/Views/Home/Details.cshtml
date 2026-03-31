@@ -1,47 +1,56 @@
-﻿@model Product
+﻿@model ShoppingCart
 
- <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
-        </ol>
-    </nav>
+<!-- Breadcrumb navigation -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Product.Title</li>
+    </ol>
+</nav>
 
 <form method="post">
-    <input asp-for="Id" hidden />
-    
+    <input asp-for="ProductId" hidden />
+
     <div class="card shadow border-0 mt-4 mb-4 rounded overflow-hidden">
         <div class="card-header bg-dark bg-gradient text-light py-4">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h3 class="text-white text-uppercase">@Model.Title</h3>
-                    <p class="text-white-50 fw-semibold mb-0">by @Model.Author</p>
+                    <h3 class="text-white text-uppercase">@Model.Product.Title</h3>
+                    <p class="text-white-50 fw-semibold mb-0">by @Model.Product.Author</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="card-body">
             <div class="py-3">
-
                 <div class="row">
+
+                    <!-- Product image -->
                     <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                        <img src="@Model.ImageUrl" width="100%" class="rounded shadow-sm border" style="object-fit:contain;" alt="@Model.Title" />
+                        <img src="@Model.Product.ImageUrl"
+                             width="100%"
+                             class="rounded shadow-sm border"
+                             style="object-fit:contain;"
+                             alt="@Model.Product.Title" />
                     </div>
 
                     <div class="col-12 col-lg-6 offset-lg-1">
+
+                        <!-- Category badge -->
                         <div class="col-12 col-md-6 pb-4">
-                            <span class="badge rounded-pill bg-info text-dark">@Model.Category.Name</span>
+                            <span class="badge rounded-pill bg-info text-dark">@Model.Product.Category?.Name</span>
                         </div>
-                        
+
+                        <!-- List price with strikethrough -->
                         <div class="row ps-2">
                             <h6 class="text-dark text-opacity-50 pb-2">
                                 <span class="text-decoration-line-through">
-                                    List Price: @Model.ListPrice.ToString("c")
+                                    List Price: @Model.Product.ListPrice.ToString("c")
                                 </span>
                             </h6>
                         </div>
-                        
+
+                        <!-- Price tiers table -->
                         <div class="row text-center ps-2">
                             <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
                                 <div class="text-dark text-opacity-50 fw-semibold">Quantity</div>
@@ -57,33 +66,63 @@
                             </div>
                         </div>
 
+                        <!-- Price values for each tier -->
                         <div class="row text-center ps-2" style="color:var(--color-accent); font-weight:800">
                             <div class="p-1 col-3 col-lg-2 bg-white">
                                 <div class="text-dark text-opacity-50 fw-semibold">Price</div>
                             </div>
                             <div class="p-1 col-3 col-lg-2 bg-white">
-                                <div>@Model.Price.ToString("c")</div>
+                                <div>@Model.Product.Price.ToString("c")</div>
                             </div>
                             <div class="p-1 col-3 col-lg-2 bg-white">
-                                <div>@Model.Price50.ToString("c")</div>
+                                <div>@Model.Product.Price50.ToString("c")</div>
                             </div>
                             <div class="p-1 col-3 col-lg-2 bg-white">
-                                <div>@Model.Price100.ToString("c")</div>
+                                <div>@Model.Product.Price100.ToString("c")</div>
                             </div>
                         </div>
 
+                        <!-- Product description rendered as HTML -->
                         <div class="row pl-2 my-3 text-secondary lh-lg">
-                            <p>@Html.Raw(Model.Description)</p>
+                            <p>@Html.Raw(Model.Product.Description)</p>
                         </div>
 
+                        <!-- Quantity selector and Add to Cart button -->
+                        <div class="row align-items-center g-3">
 
-                        <div class="row">
-                            <div class="col-12 col-md-6 pb-1">
-                                <button type="submit" class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
+                            <!-- Quantity input with min/max validation -->
+                            <div class="col-12 col-md-4">
+                                <label for="Quantity" class="form-label text-dark text-opacity-75 fw-semibold mb-1"
+                                       style="font-family:var(--font-condensed);letter-spacing:0.05em;font-size:0.85rem;">
+                                    Quantity
+                                </label>
+                                <div class="input-group">
+                                    <!-- Decrease quantity button -->
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="decreaseCount()">
+                                        <i class="fa-solid fa-minus fa-xs"></i>
+                                    </button>
+                                    <!-- Hidden input sends count value with form POST -->
+                                    <input asp-for="Quantity" type="number" id="Quantity" value="1" min="1" max="1000"
+                                           class="form-control text-center" style="max-width:70px;" />
+                                    <!-- Increase quantity button -->
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="increaseCount()">
+                                        <i class="fa-solid fa-plus fa-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Add to Cart button -->
+                            <div class="col-12 col-md-8">
+                                <label class="form-label mb-1" style="visibility:hidden;">Action</label>
+                                <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
                                     Add to Cart <i class="fa-solid fa-cart-plus ms-1"></i>
                                 </button>
                             </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -93,4 +132,23 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Increases the quantity input value by 1
+        function increaseCount() {
+            const input = document.getElementById('Quantity');
+            const max = parseInt(input.max);
+            if (parseInt(input.value) < max) {
+                input.value = parseInt(input.value) + 1;
+            }
+        }
+
+        // Decreases the quantity input value by 1 — minimum value is 1
+        function decreaseCount() {
+            const input = document.getElementById('Quantity');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+    </script>
 }
