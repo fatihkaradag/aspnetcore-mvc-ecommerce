@@ -51,6 +51,8 @@ namespace aspnetcore_mvc_ecommerce.Models
         // Due date for delayed payment — used for company accounts
         public DateOnly PaymentDueDate { get; set; }
 
+        public string? SessionId { get; set; }
+
         // Stripe payment intent ID for payment processing
         [MaxLength(200)]
         public string? PaymentIntentId { get; set; }

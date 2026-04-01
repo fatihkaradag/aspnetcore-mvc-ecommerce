@@ -138,7 +138,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
                 ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusApproved;
             }
 
-            // Saves order header to database
+            // Saves order header to database before creating Stripe session
             _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
             await _unitOfWork.SaveAsync();
 
@@ -160,20 +160,95 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
 
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
-                // TODO: Integrate Stripe payment processing for individual customers
-                // Stripe session will be created here before redirecting to confirmation
+                // Individual customer — creates Stripe checkout session for immediate payment
+                var domain = "https://localhost:7185";
+
+                var options = new Stripe.Checkout.SessionCreateOptions
+                {
+                    // Redirects to order confirmation on success
+                    SuccessUrl = domain + $"/customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+                    // Redirects back to cart on cancel
+                    CancelUrl = domain + "/customer/cart/index",
+                    LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+
+                // Builds Stripe line items from cart
+                foreach (var item in ShoppingCartVM.ShoppingCartList)
+                {
+                    var sessionLineItem = new Stripe.Checkout.SessionLineItemOptions
+                    {
+                        PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
+                        {
+                            // Stripe requires amount in smallest currency unit — cents for USD
+                            UnitAmount = (long)(item.Price * 100),
+                            Currency = "usd",
+                            ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.Product!.Title
+                            }
+                        },
+                        Quantity = item.Quantity
+                    };
+
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+                // Creates Stripe checkout session and saves session ID to order
+                var service = new Stripe.Checkout.SessionService();
+                Stripe.Checkout.Session session = service.Create(options);
+
+                _unitOfWork.OrderHeader.UpdateStripePaymentId(
+                    ShoppingCartVM.OrderHeader.Id,
+                    session.Id,
+                    session.PaymentIntentId
+                );
+                await _unitOfWork.SaveAsync();
+
+                // Redirects to Stripe checkout page using 303 See Other
+                Response.Headers.Location = session.Url;
+                return new StatusCodeResult(303);
             }
 
             return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
         }
 
-        // GET: /Cart/OrderConfirmation — displays order confirmation page
-        public IActionResult OrderConfirmation(int id)
+        // GET: /Cart/OrderConfirmation — verifies payment and clears cart after order
+        public async Task<IActionResult> OrderConfirmation(int id)
         {
-            // TODO: Fetch order details and send confirmation email
+            // Fetches order header with user info to verify payment status
+            OrderHeader? orderHeader = await _unitOfWork.OrderHeader.GetAsync(
+                u => u.Id == id,
+                includeProperties: "ApplicationUser"
+            );
+
+            if (orderHeader == null) return NotFound();
+
+            if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
+            {
+                // Individual customer — verifies Stripe payment was completed
+                var service = new Stripe.Checkout.SessionService();
+                Stripe.Checkout.Session session = service.Get(orderHeader.SessionId);
+
+                if (session.PaymentStatus.ToLower() == "paid")
+                {
+                    // Updates order with confirmed payment intent ID and approves order
+                    _unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+                    _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+
+            // Clears the user's shopping cart after successful order placement
+            List<ShoppingCart> shoppingCarts = (await _unitOfWork.ShoppingCart.GetAllAsync(
+                u => u.ApplicationUserId == orderHeader.ApplicationUserId
+            )).ToList();
+
+            _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+            await _unitOfWork.SaveAsync();
+
             return View(id);
         }
-
 
         // GET: /Cart/Plus — increases cart item quantity by 1
         public async Task<IActionResult> Plus(int cartId)

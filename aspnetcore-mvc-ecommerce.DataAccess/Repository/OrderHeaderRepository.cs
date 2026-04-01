@@ -43,13 +43,13 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Repository
                 // Stores Stripe session ID temporarily during payment processing
                 if (!string.IsNullOrEmpty(sessionId))
                 {
-                    //.SessionId = sessionId;
+                    orderFromDb.SessionId = sessionId;
                 }
                 // Stores final payment intent ID after successful payment
                 if (!string.IsNullOrEmpty(paymentIntentId))
                 {
                     orderFromDb.PaymentIntentId = paymentIntentId;
-                    orderFromDb.PaymentDate = DateTime.UtcNow;
+                    orderFromDb.PaymentDate = DateTime.Now;
                 }
             }
         }
