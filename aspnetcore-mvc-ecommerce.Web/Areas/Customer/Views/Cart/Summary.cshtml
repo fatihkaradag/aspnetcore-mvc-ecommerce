@@ -1,107 +1,173 @@
-﻿@{
-    // Tasarımı görmek için geçici Mock Data
-    var mockOrderTotal = 148.00;
-    var mockCartItems = new[] {
-        new { Title = "The Midnight Library", Quantity = 1, Price = 24.00, Author = "Matt Haig" },
-        new { Title = "Project Hail Mary", Quantity = 2, Price = 32.00, Author = "Andy Weir" },
-        new { Title = "The Great Gatsby", Quantity = 1, Price = 60.00, Author = "F. Scott Fitzgerald" }
-    };
-}
+﻿@model ShoppingCartVM
 
-<form method="post">
+<form method="post" asp-area="Customer" asp-controller="Cart" asp-action="Summary">
     <div class="container animate-fade-up">
+
+        <!-- Page header -->
         <div class="mb-5 mt-4">
             <span class="section-label">Final Step</span>
             <h1 class="section-title">Order <em>Summary</em></h1>
         </div>
 
         <div class="card border-0 bg-transparent">
+
+            <!-- Summary header with back to cart button -->
             <div class="card-header bg-ink text-light py-4 rounded-top border-0">
                 <div class="row px-4 align-items-center">
                     <div class="col-6">
-                        <h5 class="mb-0 text-white fw-serif italic" style="text-transform: none;">Shipping Details</h5>
+                        <h5 class="mb-0 text-white fw-serif italic" style="text-transform:none;">
+                            Shipping Details
+                        </h5>
                     </div>
                     <div class="col-6 text-end">
-                        <a href="#" class="btn btn-outline-light btn-sm tracking-wide">BACK TO CART</a>
+                        <!-- Navigates back to cart -->
+                        <a asp-area="Customer" asp-controller="Cart" asp-action="Index"
+                               class="btn btn-outline-light btn-sm tracking-wide">
+                            BACK TO CART
+                        </a>
                     </div>
                 </div>
             </div>
 
             <div class="card-body bg-cream shadow-card py-5">
                 <div class="row px-md-4">
+
+                    <!-- Left column — shipping information form -->
                     <div class="col-12 col-lg-6 pb-4">
                         <h4 class="text-brown fw-serif mb-4 border-bottom pb-2">Shipping Information</h4>
-                        
+
+                        <!-- Full Name -->
                         <div class="row my-2">
-                            <div class="col-3 pt-2"><label class="form-label">Full Name</label></div>
+                            <div class="col-3 pt-2">
+                                <label asp-for="OrderHeader.Name" class="form-label">Full Name</label>
+                            </div>
                             <div class="col-9">
-                                <input type="text" class="form-control shadow-xs" placeholder="John Doe" />
+                                <input asp-for="OrderHeader.Name" class="form-control shadow-xs" placeholder="John Doe" />
+                                <span asp-validation-for="OrderHeader.Name" class="text-danger" style="font-size:0.78rem;"></span>
                             </div>
                         </div>
+
+                        <!-- Phone Number -->
                         <div class="row my-2">
-                            <div class="col-3 pt-2"><label class="form-label">Phone</label></div>
+                            <div class="col-3 pt-2">
+                                <label asp-for="OrderHeader.PhoneNumber" class="form-label">Phone</label>
+                            </div>
                             <div class="col-9">
-                                <input type="text" class="form-control shadow-xs" placeholder="+1 234 567 89 00" />
+                                <input asp-for="OrderHeader.PhoneNumber" class="form-control shadow-xs" placeholder="+1 234 567 8900" />
+                                <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger" style="font-size:0.78rem;"></span>
                             </div>
                         </div>
+
+                        <!-- Street Address -->
                         <div class="row my-2">
-                            <div class="col-3 pt-2"><label class="form-label">Street</label></div>
+                            <div class="col-3 pt-2">
+                                <label asp-for="OrderHeader.StreetAddress" class="form-label">Street</label>
+                            </div>
                             <div class="col-9">
-                                <input type="text" class="form-control shadow-xs" placeholder="123 Editorial St." />
+                                <input asp-for="OrderHeader.StreetAddress" class="form-control shadow-xs" placeholder="123 Main St" />
+                                <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger" style="font-size:0.78rem;"></span>
                             </div>
                         </div>
+
+                        <!-- City -->
                         <div class="row my-2">
-                            <div class="col-3 pt-2"><label class="form-label">City</label></div>
+                            <div class="col-3 pt-2">
+                                <label asp-for="OrderHeader.City" class="form-label">City</label>
+                            </div>
                             <div class="col-9">
-                                <input type="text" class="form-control shadow-xs" placeholder="Istanbul" />
+                                <input asp-for="OrderHeader.City" class="form-control shadow-xs" placeholder="New York" />
+                                <span asp-validation-for="OrderHeader.City" class="text-danger" style="font-size:0.78rem;"></span>
                             </div>
                         </div>
+
+                        <!-- State -->
                         <div class="row my-2">
-                            <div class="col-3 pt-2"><label class="form-label">Postal Code</label></div>
+                            <div class="col-3 pt-2">
+                                <label asp-for="OrderHeader.State" class="form-label">State</label>
+                            </div>
                             <div class="col-9">
-                                <input type="text" class="form-control shadow-xs" placeholder="34000" />
+                                <input asp-for="OrderHeader.State" class="form-control shadow-xs" placeholder="NY" />
+                                <span asp-validation-for="OrderHeader.State" class="text-danger" style="font-size:0.78rem;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Postal Code -->
+                        <div class="row my-2">
+                            <div class="col-3 pt-2">
+                                <label asp-for="OrderHeader.PostalCode" class="form-label">Postal Code</label>
+                            </div>
+                            <div class="col-9">
+                                <input asp-for="OrderHeader.PostalCode" class="form-control shadow-xs" placeholder="10001" />
+                                <span asp-validation-for="OrderHeader.PostalCode" class="text-danger" style="font-size:0.78rem;"></span>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Right column — order items list -->
                     <div class="col-12 col-lg-5 offset-lg-1">
                         <h4 class="text-ink fw-serif mb-4 border-bottom pb-2">Order List</h4>
                         <ul class="list-group mb-3 shadow-xs">
-                            @foreach (var item in mockCartItems)
+
+                            <!-- Iterates through cart items and displays title, quantity and price -->
+                            @foreach (var details in Model.ShoppingCartList)
                             {
                                 <li class="list-group-item d-flex justify-content-between bg-white py-3 border-muted-warm">
                                     <div>
-                                        <h6 class="my-0 text-ink fw-bold">@item.Title</h6>
-                                        <small class="text-muted-warm italic">Quantity: @item.Quantity</small>
+                                        <h6 class="my-0 text-ink fw-bold">@details.Product?.Title</h6>
+                                        <small class="text-muted-warm italic">Quantity: @details.Quantity</small>
                                     </div>
-                                    <span class="text-brown fw-semibold">$@((item.Price * item.Quantity).ToString("F2"))</span>
+                                    <!-- Displays line total using tier price calculated in controller -->
+                                    <span class="text-brown fw-semibold">
+                                        @((details.Price * details.Quantity).ToString("c"))
+                                    </span>
                                 </li>
                             }
+
+                            <!-- Order total row -->
                             <li class="list-group-item d-flex justify-content-between bg-parchment py-3">
-                                <strong class="text-ink">Total (USD)</strong>
-                                <strong class="price-sale fs-5">$@mockOrderTotal.ToString("F2")</strong>
+                                <strong class="text-ink">Total</strong>
+                                <strong class="price-sale fs-5">@Model.OrderHeader.OrderTotal.ToString("c")</strong>
                             </li>
+
                         </ul>
                     </div>
+
                 </div>
             </div>
 
+            <!-- Footer with estimated delivery and place order button -->
             <div class="card-footer bg-parchment border-top border-muted-warm py-4">
                 <div class="row align-items-center px-md-4">
+
+                    <!-- Estimated delivery date — calculated from today -->
                     <div class="col-12 col-md-8">
                         <p class="text-brown italic mb-0">
                             <i class="bi bi-truck me-2"></i>
                             Estimated Arrival:
-                            <strong>@DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</strong>
+                            <strong>
+                                @DateTime.UtcNow.AddDays(7).ToShortDateString() —
+                                @DateTime.UtcNow.AddDays(14).ToShortDateString()
+                            </strong>
                         </p>
                     </div>
+
+                    <!-- Place order submit button -->
                     <div class="col-12 col-md-4 text-end">
-                        <button type="button" class="btn btn-warning w-100 py-3 shadow-lift fw-bold tracking-wider text-uppercase">
+                        <button type="submit" value="Place Order"  class="btn btn-warning w-100 py-3 shadow-lift fw-bold tracking-wider text-uppercase">
                             PLACE ORDER <i class="bi bi-check2-circle ms-2"></i>
                         </button>
                     </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 </form>
+
+@section Scripts {
+    @* Loads client-side validation scripts *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

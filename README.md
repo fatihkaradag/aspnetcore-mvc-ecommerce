@@ -18,6 +18,7 @@ A complete, production-ready e-commerce web application built with ASP.NET Core 
 ![6](screenshots/6.png)
 -
 ![7](screenshots/7.png)
+-
 
 ## ✨ Features
 

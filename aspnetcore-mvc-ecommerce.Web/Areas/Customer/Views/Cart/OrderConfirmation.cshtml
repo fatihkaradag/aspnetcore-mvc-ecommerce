@@ -1,0 +1,45 @@
+﻿@model int
+
+<div class="container animate-fade-up">
+    <div class="row justify-content-center mt-5">
+        <div class="col-12 col-md-8 col-lg-6 text-center">
+
+            <!-- Success icon -->
+            <div class="mb-4">
+                <i class="fa-solid fa-circle-check fa-4x" style="color:var(--color-accent);"></i>
+            </div>
+
+            <!-- Order success message -->
+            <div class="d-flex align-items-baseline gap-3 mb-3 justify-content-center">
+                <span class="section-label">Thank You</span>
+                <hr class="section-divider my-0" style="width:60px;">
+            </div>
+            <h1 class="section-title mb-3">Order Placed <em>Successfully</em></h1>
+
+            <!-- Order number display -->
+            <p class="text-muted mb-1" style="font-family:var(--font-condensed);letter-spacing:0.08em;font-size:0.85rem;">
+                YOUR ORDER NUMBER
+            </p>
+            <h3 class="fw-bold mb-4" style="color:var(--color-accent);">#@Model</h3>
+
+            <p class="text-muted mb-5" style="font-size:0.9rem;">
+                We have received your order and will contact you shortly with shipping details.
+            </p>
+
+            <!-- Action buttons -->
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <!-- Navigates back to product listing -->
+                <a asp-area="Customer" asp-controller="Home" asp-action="Index"
+                       class="btn btn-primary px-4 py-2">
+                    <i class="fa-solid fa-book me-2"></i>Continue Shopping
+                </a>
+                <!-- Navigates to order details page -->
+                <a asp-area="Customer" asp-controller="Order" asp-action="Details" asp-route-orderId="@Model"
+                       class="btn btn-outline-dark px-4 py-2">
+                    <i class="fa-solid fa-receipt me-2"></i>View Order
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
