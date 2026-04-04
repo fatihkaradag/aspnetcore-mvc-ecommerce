@@ -12,8 +12,8 @@ using aspnetcore_mvc_ecommerce.DataAccess.Data;
 namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260331204440_orderHeaderDetailsToDb")]
-    partial class orderHeaderDetailsToDb
+    [Migration("20260404165038_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -438,6 +438,9 @@ namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("SessionId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ShippingDate")
                         .HasColumnType("datetime2");

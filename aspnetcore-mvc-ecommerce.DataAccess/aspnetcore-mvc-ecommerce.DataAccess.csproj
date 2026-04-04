@@ -22,8 +22,4 @@
     <ProjectReference Include="..\aspnetcore-mvc-ecommerce.Utility\aspnetcore-mvc-ecommerce.Utility.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

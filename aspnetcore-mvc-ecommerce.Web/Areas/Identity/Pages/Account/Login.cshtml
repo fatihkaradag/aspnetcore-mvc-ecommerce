@@ -8,25 +8,60 @@
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8 shadow-lg rounded-4 overflow-hidden bg-white d-flex flex-wrap p-0">
-            
+
             <div class="col-12 col-md-6 p-5">
                 <div class="mb-4">
                     <h1 class="h3 fw-bold text-dark">@ViewData["Title"]</h1>
                     <p class="text-muted small">Enter your credentials to access your library.</p>
                 </div>
 
+                <!-- Developer QuickFill — remove before production deployment -->
+                <div class="alert alert-info d-flex flex-wrap gap-2 justify-content-center mb-4 border-0 shadow-sm rounded-4">
+                    <div class="w-100 text-center mb-1">
+                        <small class="fw-bold text-uppercase text-muted" style="font-size:0.7rem;">
+                            <i class="fa-solid fa-code me-1"></i> Developer QuickFill (Remove in Production)
+                        </small>
+                    </div>
+
+                    <button type="button" class="btn btn-sm btn-dark rounded-pill px-3"
+                            onclick="quickFill('admin@example.com', 'Admin123!')">
+                        <i class="fa-solid fa-user-shield me-1"></i> Admin
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-info text-white rounded-pill px-3"
+                            onclick="quickFill('employee@example.com', 'Employee123!')">
+                        <i class="fa-solid fa-user-tie me-1"></i> Employee
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                            onclick="quickFill('company@example.com', 'Company123!')">
+                        <i class="fa-solid fa-building me-1"></i> Company
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-secondary rounded-pill px-3"
+                            onclick="quickFill('test@example.com', 'Test123!')">
+                        <i class="fa-solid fa-user me-1"></i> Customer
+                    </button>
+                </div>
+
                 <form id="account" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger small" role="alert"></div>
 
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Email" class="form-control border-0 border-bottom rounded-0" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                        <label asp-for="Input.Email" class="text-muted"><i class="fa-solid fa-user me-2"></i>Email Address</label>
+                        <input asp-for="Input.Email" class="form-control border-0 border-bottom rounded-0"
+                               autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="Input.Email" class="text-muted">
+                            <i class="fa-solid fa-user me-2"></i>Email Address
+                        </label>
                         <span asp-validation-for="Input.Email" class="text-danger small"></span>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Password" class="form-control border-0 border-bottom rounded-0" autocomplete="current-password" aria-required="true" placeholder="password" />
-                        <label asp-for="Input.Password" class="text-muted"><i class="fa-solid fa-key me-2"></i>Password</label>
+                        <input asp-for="Input.Password" class="form-control border-0 border-bottom rounded-0"
+                               autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <label asp-for="Input.Password" class="text-muted">
+                            <i class="fa-solid fa-key me-2"></i>Password
+                        </label>
                         <span asp-validation-for="Input.Password" class="text-danger small"></span>
                     </div>
 
@@ -37,23 +72,28 @@
                                 @Html.DisplayNameFor(m => m.Input.RememberMe)
                             </label>
                         </div>
-                        <a id="forgot-password" asp-page="./ForgotPassword" class="text-primary small text-decoration-none">Forgot password?</a>
+                        <a id="forgot-password" asp-page="./ForgotPassword"
+                           class="text-primary small text-decoration-none">Forgot password?</a>
                     </div>
 
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary rounded-pill shadow-sm py-3 fw-bold text-uppercase mb-3">
+                    <button id="login-submit" type="submit"
+                            class="w-100 btn btn-lg btn-primary rounded-pill shadow-sm py-3 fw-bold text-uppercase mb-3">
                         Sign In <i class="fa-solid fa-right-to-bracket ms-2"></i>
                     </button>
 
                     <div class="text-center">
                         <p class="text-muted small">
                             New to our bookstore?
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-primary fw-bold text-decoration-none">Join Now</a>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"
+                               class="text-primary fw-bold text-decoration-none">Join Now</a>
                         </p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="text-muted text-decoration-none x-small mt-2 d-block">Resend email confirmation</a>
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation"
+                           class="text-muted text-decoration-none x-small mt-2 d-block">Resend email confirmation</a>
                     </div>
                 </form>
             </div>
 
+            <!-- Right panel — branding and security info -->
             <div class="col-12 col-md-6 bg-light d-none d-md-flex align-items-center justify-content-center border-start p-5"
                  style="background: #f8f9fa url('/images/login-bg-pattern.png');">
                 <div class="text-center">
@@ -61,10 +101,12 @@
                         <i class="fa-solid fa-bookmark fa-4x text-primary opacity-25"></i>
                     </div>
                     <h4 class="fw-bold">Don't lose your place.</h4>
-                    <p class="text-muted small px-4">Log in to sync your wishlist across devices and see your reading history.</p>
-                    
+                    <p class="text-muted small px-4">
+                        Log in to sync your wishlist across devices and see your reading history.
+                    </p>
+
                     <hr class="w-25 mx-auto my-4" />
-                    
+
                     <div class="d-grid gap-2">
                         <p class="text-muted x-small mb-0">Security Tip:</p>
                         <span class="badge bg-white text-dark border fw-normal py-2 px-3 rounded-pill shadow-xs mx-auto">
@@ -73,11 +115,18 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Fills email and password fields with preset developer credentials
+        function quickFill(email, password) {
+            document.getElementById("Input_Email").value = email;
+            document.getElementById("Input_Password").value = password;
+        }
+    </script>
 }

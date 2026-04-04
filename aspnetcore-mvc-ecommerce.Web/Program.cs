@@ -1,6 +1,8 @@
 using aspnetcore_mvc_ecommerce.DataAccess.Data;
+using aspnetcore_mvc_ecommerce.DataAccess.DbInitializer;
 using aspnetcore_mvc_ecommerce.DataAccess.Repository;
 using aspnetcore_mvc_ecommerce.DataAccess.Repository.IRepository;
+using aspnetcore_mvc_ecommerce.Models;
 using aspnetcore_mvc_ecommerce.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -21,10 +23,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Binds Stripe configuration section to StripeSettings model
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
-// Registers ASP.NET Core Identity with custom roles and EF Core stores
+// Registers ASP.NET Core Identity with ApplicationUser and custom roles
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 // Configures application cookie paths for login, logout and access denied
 builder.Services.ConfigureApplicationCookie(options =>
@@ -34,9 +37,13 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
+// Registers DbInitializer for role and user seeding on startup
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
 // Adds Razor Pages support — required for Identity UI
 builder.Services.AddRazorPages();
 
+// Configures distributed memory cache and session with security options
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -49,6 +56,9 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
+// Registers IHttpContextAccessor — required for session access in views and view components
+builder.Services.AddHttpContextAccessor();
+
 // ===== PIPELINE CONFIGURATION =====
 
 var app = builder.Build();
@@ -58,26 +68,36 @@ if (!app.Environment.IsDevelopment())
     // Uses custom error handler in production
     app.UseExceptionHandler("/Home/Error");
 
-    // Enforces HTTPS strict transport security — 30 days default
+    // Enforces HTTPS strict transport security
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.MapStaticAssets();
 
 // Configures Stripe API key from appsettings — never hardcode secrets
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseRouting();
 
+// Session must be before Authentication and Authorization in the pipeline
+app.UseSession();
+
 // Authentication must come before Authorization in the pipeline
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseSession();
+// Seeds database with roles and default users on startup
+await SeedDatabaseAsync();
+
+async Task SeedDatabaseAsync()
+{
+    using var scope = app.Services.CreateScope();
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+    await dbInitializer.InitializeAsync();
+}
 
 app.MapRazorPages();
-
-app.MapStaticAssets();
 
 // Maps area-based controller routes with Customer area as default
 app.MapControllerRoute(
