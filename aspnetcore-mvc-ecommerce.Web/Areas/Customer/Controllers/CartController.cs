@@ -237,6 +237,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
                     _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     await _unitOfWork.SaveAsync();
                 }
+                HttpContext.Session.Clear();
             }
 
             // Clears the user's shopping cart after successful order placement
@@ -253,51 +254,76 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
         // GET: /Cart/Plus — increases cart item quantity by 1
         public async Task<IActionResult> Plus(int cartId)
         {
-            // Fetches cart item asynchronously via repository
+            // Reject invalid id early
+            if (cartId <= 0) return BadRequest();
+
             ShoppingCart? cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(u => u.Id == cartId);
             if (cartFromDb == null) return NotFound();
 
-            // Increments quantity and persists changes
+            // Increment quantity and persist
             cartFromDb.Quantity += 1;
             _unitOfWork.ShoppingCart.Update(cartFromDb);
             await _unitOfWork.SaveAsync();
 
+            // Refresh session cart count after update
+            int cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(
+                u => u.ApplicationUserId == cartFromDb.ApplicationUserId
+            )).Count();
+            HttpContext.Session.SetInt32(SD.SessionCart, cartCount);
+
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Cart/Minus — decreases cart item quantity by 1 or removes if quantity is 1
+        // GET: /Cart/Minus — decreases quantity by 1 or removes item if quantity is 1
         public async Task<IActionResult> Minus(int cartId)
         {
-            // Fetches cart item asynchronously via repository
-            ShoppingCart? cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(u => u.Id == cartId);
+            // Reject invalid id early
+            if (cartId <= 0) return BadRequest();
+
+            ShoppingCart? cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(u => u.Id == cartId, tracked: true);
             if (cartFromDb == null) return NotFound();
 
             if (cartFromDb.Quantity <= 1)
             {
-                // Removes item from cart if quantity would drop below 1
+                // Remove item from cart when quantity would drop to zero
                 _unitOfWork.ShoppingCart.Remove(cartFromDb);
+                await _unitOfWork.SaveAsync();
+
+                // Recalculate session count after removal
+                int cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(
+                    u => u.ApplicationUserId == cartFromDb.ApplicationUserId
+                )).Count();
+                HttpContext.Session.SetInt32(SD.SessionCart, cartCount);
             }
             else
             {
-                // Decrements quantity and persists changes
+                // Decrement quantity and persist
                 cartFromDb.Quantity -= 1;
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
+                await _unitOfWork.SaveAsync();
             }
 
-            await _unitOfWork.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
 
         // GET: /Cart/Remove — removes item from cart entirely
         public async Task<IActionResult> Remove(int cartId)
         {
-            // Fetches cart item asynchronously via repository before removing
-            ShoppingCart? cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(u => u.Id == cartId);
+            // Reject invalid id early
+            if (cartId <= 0) return BadRequest();
+
+            ShoppingCart? cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(u => u.Id == cartId,tracked:true);
             if (cartFromDb == null) return NotFound();
 
-            // Removes cart item and persists changes
+            // Remove item and persist before recalculating session count
             _unitOfWork.ShoppingCart.Remove(cartFromDb);
             await _unitOfWork.SaveAsync();
+
+            // Recalculate session count after removal
+            int cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(
+                u => u.ApplicationUserId == cartFromDb.ApplicationUserId
+            )).Count();
+            HttpContext.Session.SetInt32(SD.SessionCart, cartCount);
 
             return RedirectToAction(nameof(Index));
         }

@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -61,8 +64,6 @@
                             </a>
                         </li>
 
-                       
-
                         <!-- Divider (desktop only) -->
                         <li class="nav-item d-none d-lg-flex align-items-center">
                             <span style="width:1px;height:16px;background:var(--c-border-dk);
@@ -88,19 +89,25 @@
                             </div>
                         </li>
 
-                        <!-- Cart -->
+
+                        <!-- Cart icon with live count from ShoppingCart view component -->
                         <li class="nav-item">
-                            <a class="nav-link position-relative" title="Cart" asp-area="Customer" asp-controller="Cart" asp-action="Index"
+                            <a class="nav-link position-relative" title="Cart"
+                                   asp-area="Customer" asp-controller="Cart" asp-action="Index"
                                    style="padding-left:0.6rem !important;padding-right:0.6rem !important;">
+
                                 <i class="fa-solid fa-cart-shopping" style="font-size:1rem;"></i>
+
                                 <span class="position-absolute top-5 start-70 translate-middle badge rounded-pill"
                                       style="background:var(--c-accent);font-size:0.52rem;
                                     padding:0.22em 0.42em;font-family:var(--font-body);">
-                                    0
+                                    @await Component.InvokeAsync("ShoppingCart")
                                 </span>
+
                             </a>
                         </li>
-
+                            
+                           
 
                         <partial name="_LoginPartial"/>
 

@@ -37,14 +37,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Adds Razor Pages support — required for Identity UI
 builder.Services.AddRazorPages();
 
-// TODO: Enable session support for shopping cart count display in navbar
-//builder.Services.AddDistributedMemoryCache();
-//builder.Services.AddSession(options =>
-//{
-//    options.IdleTimeout = TimeSpan.FromMinutes(100);
-//    options.Cookie.HttpOnly = true;
-//    options.Cookie.IsEssential = true;
-//});
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 // Registers application-specific services via dependency injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -74,8 +73,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// TODO: Enable session middleware after enabling session services above
-//app.UseSession();
+app.UseSession();
 
 app.MapRazorPages();
 

@@ -1,5 +1,6 @@
 using aspnetcore_mvc_ecommerce.DataAccess.Repository.IRepository;
 using aspnetcore_mvc_ecommerce.Models;
+using aspnetcore_mvc_ecommerce.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -21,6 +22,21 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Resolve authenticated user id from claims
+            var claimsIdentity = (ClaimsIdentity)User.Identity!;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim != null)
+            {
+                int cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(
+                    u => u.ApplicationUserId == claim.Value
+                )).Count();
+
+                HttpContext.Session.SetInt32(SD.SessionCart, cartCount);
+
+            }
+
+
             IEnumerable<Product> productList = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category");
             return View(productList);
         }
@@ -63,40 +79,57 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details(ShoppingCart shoppingCart)
         {
+            // Resolve authenticated user id from claims
             var claimsIdentity = (ClaimsIdentity)User.Identity!;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Reject if user identity cannot be resolved
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Details POST: Could not resolve userId from claims.");
+                return Unauthorized();
+            }
 
             shoppingCart.ApplicationUserId = userId;
 
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                ShoppingCart? cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(
-                    u => u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId
+                // Reload product with category for view re-render on validation failure
+                shoppingCart.Product = await _unitOfWork.Product.GetAsync(
+                    u => u.Id == shoppingCart.ProductId,
+                    includeProperties: "Category"
                 );
-
-                if (cartFromDb != null)
-                {
-                    cartFromDb.Quantity += shoppingCart.Quantity;
-                    _unitOfWork.ShoppingCart.Update(cartFromDb);
-                }
-                else
-                {
-                    _unitOfWork.ShoppingCart.Add(shoppingCart);
-                }
-
-                await _unitOfWork.SaveAsync();
-
-                TempData["success"] = "Cart updated successfully.";
-                return RedirectToAction(nameof(Index));
+                return View(shoppingCart);
             }
 
-            shoppingCart.Product = await _unitOfWork.Product.GetAsync(
-                u => u.Id == shoppingCart.ProductId,
-                includeProperties: "Category"
+            // Check if this product already exists in the user's cart
+            ShoppingCart? cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(
+                u => u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId
             );
 
-            return View(shoppingCart);
+            if (cartFromDb != null)
+            {
+                // Increment quantity if product already in cart
+                cartFromDb.Quantity += shoppingCart.Quantity;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+            }
+            else
+            {
+                // Add new cart line item
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            // Update session cart count after every cart modification
+            int cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(
+                u => u.ApplicationUserId == userId
+            )).Count();
+
+            HttpContext.Session.SetInt32(SD.SessionCart, cartCount);
+
+            TempData["success"] = "Cart updated successfully.";
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()
