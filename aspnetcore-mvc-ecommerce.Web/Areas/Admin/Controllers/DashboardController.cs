@@ -6,7 +6,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 {
     // Handles the admin dashboard — displays store summary statistics
     [Area("Admin")]
-    [Authorize(Roles = "Admin")] // Restricts access to admin users only
+    [Authorize(Roles = "Admin,Employee")] // Restricts access to admin users only
     public class DashboardController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -28,8 +28,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
                 ViewBag.CategoryCount = (await _unitOfWork.Category.GetAllAsync()).Count();
                 ViewBag.CompanyCount = (await _unitOfWork.Company.GetAllAsync()).Count();
 
-                // TODO: Update when Order module is implemented
-                ViewBag.OrderCount = 0;
+                ViewBag.OrderCount = (await _unitOfWork.OrderHeader.GetAllAsync()).Count();
 
                 _logger.LogInformation("Dashboard metrics loaded successfully at {Time}", DateTime.UtcNow);
 

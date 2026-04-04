@@ -48,16 +48,11 @@
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="#">
-                        <i class="fa-regular fa-heart fa-fw me-2" style="color:var(--c-tan);"></i>Wishlist
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                        <i class="fa-solid fa-box fa-fw me-2" style="color:var(--c-tan);"></i>Order Management
                     </a>
                 </li>
-                <li>
-                    <a class="dropdown-item" href="#">
-                        <i class="fa-regular fa-clock fa-fw me-2" style="color:var(--c-tan);"></i>Orders
-                    </a>
-                </li>
-                @if (User.IsInRole(SD.Role_Admin))
+                @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                 {
                 <li>
                     <a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">

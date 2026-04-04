@@ -1,0 +1,405 @@
+﻿@model OrderVM
+@using aspnetcore_mvc_ecommerce.Utility
+
+<div class="container animate-fade-up">
+
+    <!-- Breadcrumb navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Panel</a></li>
+            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Order" asp-action="Index">Orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order #@Model.OrderHeader.Id</li>
+        </ol>
+    </nav>
+
+    <!-- Page header -->
+    <div class="d-flex align-items-baseline gap-3 mb-4">
+        <span class="section-label">Order Management</span>
+        <hr class="section-divider my-0">
+    </div>
+    <h1 class="section-title mb-5">Order <em>Details</em></h1>
+
+    <!-- Single form — action buttons override the action via asp-action -->
+    <form method="post" asp-area="Admin" asp-controller="Order" asp-action="UpdateOrderDetail">
+        @Html.AntiForgeryToken()
+
+        <!-- Hidden field sends order header Id with the form POST -->
+        <input asp-for="OrderHeader.Id" hidden />
+
+        <div class="row g-4">
+
+            <!-- Left column — customer, shipping and tracking info -->
+            <div class="col-12 col-lg-7">
+                <div class="card px-4 py-5 px-md-5">
+
+                    <!-- Customer information section -->
+                    <h5 class="fw-bold mb-4" style="font-family:var(--font-condensed);letter-spacing:0.08em;">
+                        Customer Information
+                    </h5>
+
+                    <!-- Email — always read-only, never editable -->
+                    <div class="row mb-3">
+                        <div class="col-4 text-muted" style="font-size:0.85rem;">Email</div>
+                        <div class="col-8">@Model.OrderHeader.ApplicationUser?.Email</div>
+                    </div>
+
+                    <!-- Name — editable for Admin/Employee, read-only for others -->
+                    <div class="row mb-3">
+                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                        {
+                            <div class="col-12">
+                                <label asp-for="OrderHeader.Name" class="form-label"></label>
+                                <input asp-for="OrderHeader.Name" class="form-control" placeholder="John Doe" />
+                                <span asp-validation-for="OrderHeader.Name" class="text-danger" style="font-size:0.78rem;"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-4 text-muted" style="font-size:0.85rem;">Name</div>
+                            <div class="col-8 fw-semibold">@Model.OrderHeader.Name</div>
+                        }
+                    </div>
+
+                    <!-- Phone — editable for Admin/Employee, read-only for others -->
+                    <div class="row mb-3">
+                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                        {
+                            <div class="col-12">
+                                <label asp-for="OrderHeader.PhoneNumber" class="form-label"></label>
+                                <input asp-for="OrderHeader.PhoneNumber" class="form-control" placeholder="+1 234 567 8900" />
+                                <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger" style="font-size:0.78rem;"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-4 text-muted" style="font-size:0.85rem;">Phone</div>
+                            <div class="col-8">@Model.OrderHeader.PhoneNumber</div>
+                        }
+                    </div>
+
+                    <hr class="section-divider my-4">
+
+                    <!-- Shipping information section -->
+                    <h5 class="fw-bold mb-4" style="font-family:var(--font-condensed);letter-spacing:0.08em;">
+                        Shipping Information
+                    </h5>
+
+                    <!-- Street Address — editable for Admin/Employee, read-only for others -->
+                    <div class="row mb-3">
+                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                        {
+                            <div class="col-12">
+                                <label asp-for="OrderHeader.StreetAddress" class="form-label"></label>
+                                <input asp-for="OrderHeader.StreetAddress" class="form-control" placeholder="123 Main St" />
+                                <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger" style="font-size:0.78rem;"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-4 text-muted" style="font-size:0.85rem;">Address</div>
+                            <div class="col-8">@Model.OrderHeader.StreetAddress</div>
+                        }
+                    </div>
+
+                    <!-- City — editable for Admin/Employee, read-only for others -->
+                    <div class="row mb-3">
+                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                        {
+                            <div class="col-12">
+                                <label asp-for="OrderHeader.City" class="form-label"></label>
+                                <input asp-for="OrderHeader.City" class="form-control" placeholder="New York" />
+                                <span asp-validation-for="OrderHeader.City" class="text-danger" style="font-size:0.78rem;"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-4 text-muted" style="font-size:0.85rem;">City</div>
+                            <div class="col-8">@Model.OrderHeader.City</div>
+                        }
+                    </div>
+
+                    <!-- State — editable for Admin/Employee, read-only for others -->
+                    <div class="row mb-3">
+                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                        {
+                            <div class="col-12">
+                                <label asp-for="OrderHeader.State" class="form-label"></label>
+                                <input asp-for="OrderHeader.State" class="form-control" placeholder="NY" />
+                                <span asp-validation-for="OrderHeader.State" class="text-danger" style="font-size:0.78rem;"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-4 text-muted" style="font-size:0.85rem;">State</div>
+                            <div class="col-8">@Model.OrderHeader.State</div>
+                        }
+                    </div>
+
+                    <!-- Postal Code — editable for Admin/Employee, read-only for others -->
+                    <div class="row mb-3">
+                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                        {
+                            <div class="col-12">
+                                <label asp-for="OrderHeader.PostalCode" class="form-label"></label>
+                                <input asp-for="OrderHeader.PostalCode" class="form-control" placeholder="10001" />
+                                <span asp-validation-for="OrderHeader.PostalCode" class="text-danger" style="font-size:0.78rem;"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-4 text-muted" style="font-size:0.85rem;">Postal Code</div>
+                            <div class="col-8">@Model.OrderHeader.PostalCode</div>
+                        }
+                    </div>
+
+                    <hr class="section-divider my-4">
+
+                    <!-- Tracking information — editable for Admin/Employee only -->
+                    <h5 class="fw-bold mb-4" style="font-family:var(--font-condensed);letter-spacing:0.08em;">
+                        Tracking Information
+                    </h5>
+
+                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                    {
+                        <!-- Carrier input — editable for Admin/Employee -->
+                        <div class="mb-3">
+                            <label asp-for="OrderHeader.Carrier" class="form-label"></label>
+                            <input id="carrier" asp-for="OrderHeader.Carrier" class="form-control" placeholder="e.g. FedEx, UPS" />
+                        </div>
+                        <!-- Tracking number input — editable for Admin/Employee -->
+                        <div class="mb-3">
+                            <label asp-for="OrderHeader.TrackingNumber" class="form-label"></label>
+                            <input id="trackingNumber" asp-for="OrderHeader.TrackingNumber" class="form-control" placeholder="e.g. 1Z999AA10123456784" />
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Carrier read-only display -->
+                        <div class="row mb-3">
+                            <div class="col-4 text-muted" style="font-size:0.85rem;">Carrier</div>
+                            <div class="col-8">@(Model.OrderHeader.Carrier ?? "Not assigned")</div>
+                        </div>
+                        <!-- Tracking number read-only display -->
+                        <div class="row mb-3">
+                            <div class="col-4 text-muted" style="font-size:0.85rem;">Tracking #</div>
+                            <div class="col-8">@(Model.OrderHeader.TrackingNumber ?? "Not assigned")</div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+            <!-- Right column — order status, payment info and line items -->
+            <div class="col-12 col-lg-5">
+                <div class="card px-4 py-5 px-md-4">
+
+                    <!-- Order and payment status section -->
+                    <h5 class="fw-bold mb-4" style="font-family:var(--font-condensed);letter-spacing:0.08em;">
+                        Order Status
+                    </h5>
+
+                    <!-- Payment status badge -->
+                    <div class="row mb-3">
+                        <div class="col-6 text-muted" style="font-size:0.85rem;">Payment Status</div>
+                        <div class="col-6">
+                            <span class="badge rounded-pill px-3 py-2 bg-info text-dark"
+                                  style="font-family:var(--font-condensed);letter-spacing:0.08em;">
+                                @Model.OrderHeader.PaymentStatus
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Order status badge -->
+                    <div class="row mb-3">
+                        <div class="col-6 text-muted" style="font-size:0.85rem;">Order Status</div>
+                        <div class="col-6">
+                            <span class="badge rounded-pill px-3 py-2"
+                                  style="background:var(--color-accent);font-family:var(--font-condensed);letter-spacing:0.08em;">
+                                @Model.OrderHeader.OrderStatus
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Order date -->
+                    <div class="row mb-3">
+                        <div class="col-6 text-muted" style="font-size:0.85rem;">Order Date</div>
+                        <div class="col-6">@Model.OrderHeader.OrderDate.ToShortDateString()</div>
+                    </div>
+
+                    <!-- Payment Due Date for delayed-payment orders; Payment Date for regular orders -->
+                    @if (Model.OrderHeader.SessionId != null)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-6 text-muted" style="font-size:0.85rem;">Payment Due Date</div>
+                            <div class="col-6">@Model.OrderHeader.PaymentDueDate.ToShortDateString()</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row mb-3">
+                            <div class="col-6 text-muted" style="font-size:0.85rem;">Payment Date</div>
+                            <div class="col-6">@Model.OrderHeader.PaymentDate.ToShortDateString()</div>
+                        </div>
+                    }
+
+                    <!-- Stripe payment intent ID -->
+                    <div class="row mb-3">
+                        <div class="col-6 text-muted" style="font-size:0.85rem;">Payment Intent</div>
+                        <div class="col-6" style="font-size:0.78rem;word-break:break-all;">
+                            @(Model.OrderHeader.PaymentIntentId ?? "—")
+                        </div>
+                    </div>
+
+                    <hr class="section-divider my-4">
+
+                    <!-- Order line items -->
+                    <h5 class="fw-bold mb-3" style="font-family:var(--font-condensed);letter-spacing:0.08em;">
+                        Order Items
+                    </h5>
+
+                    @if (!Model.OrderDetails.Any())
+                    {
+                        <!-- Empty state — no line items found -->
+                        <p class="text-muted" style="font-size:0.85rem;">No items found for this order.</p>
+                    }
+                    else
+                    {
+                        @foreach (var detail in Model.OrderDetails)
+                        {
+                            <!-- Line item: product title, quantity and line total -->
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <p class="mb-0 fw-semibold" style="font-size:0.9rem;">@detail.Product?.Title</p>
+                                    <small class="text-muted">Qty: @detail.Quantity</small>
+                                </div>
+                                <span style="color:var(--color-accent);font-weight:700;">
+                                    @((detail.Price * detail.Quantity).ToString("c"))
+                                </span>
+                            </div>
+                        }
+                    }
+
+                    <hr class="section-divider my-3">
+
+                    <!-- Order total -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">Total</h5>
+                        <h4 class="mb-0" style="color:var(--color-accent);font-weight:800;">
+                            @Model.OrderHeader.OrderTotal.ToString("c")
+                        </h4>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Action buttons -->
+        <div class="row mt-4 mb-5">
+            <div class="col-12 d-flex gap-3 flex-wrap">
+
+                <!-- Back to order list -->
+                <a asp-area="Admin" asp-controller="Order" asp-action="Index"
+                       class="btn btn-outline-dark px-4">
+                    <i class="fa-solid fa-arrow-left fa-sm me-2"></i>Back
+                </a>
+
+                <!-- Update Details — Admin/Employee only -->
+                @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                {
+                    <button type="submit"
+                            asp-area="Admin" asp-controller="Order" asp-action="UpdateOrderDetail"
+                            class="btn btn-primary px-4">
+                        <i class="fa-solid fa-floppy-disk fa-sm me-2"></i>Update Details
+                    </button>
+                }
+
+                <!-- Pay Now — Company orders that are shipped but not yet paid -->
+                @if (Model.OrderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment
+                                     && Model.OrderHeader.OrderStatus == SD.StatusShipped)
+                {
+                    <button type="submit"
+                            asp-route-id="@Model.OrderHeader.Id"
+                            class="btn btn-primary px-4">
+                        <i class="fa-solid fa-credit-card fa-sm me-2"></i>Pay Now
+                    </button>
+                }
+
+                @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                {
+                    <!-- Start Processing — only when order is Approved -->
+                    @if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
+                    {
+                        <button type="submit"
+                                asp-area="Admin" asp-controller="Order" asp-action="StartProcessing"
+                                asp-route-id="@Model.OrderHeader.Id"
+                                class="btn btn-warning px-4">
+                            <i class="fa-solid fa-rotate fa-sm me-2"></i>Start Processing
+                        </button>
+                    }
+
+                    <!-- Ship Order — only when order is InProcess; validates carrier and tracking first -->
+                    @if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+                    {
+                        <button type="submit"
+                                asp-area="Admin" asp-controller="Order" asp-action="ShipOrder"
+                                asp-route-id="@Model.OrderHeader.Id"
+                                onclick="return ValidateInput()"
+                                class="btn btn-success px-4">
+                            <i class="fa-solid fa-truck fa-sm me-2"></i>Ship Order
+                        </button>
+                    }
+
+                    <!-- Cancel Order — hidden when Shipped, Cancelled or Refunded -->
+                    @if (Model.OrderHeader.OrderStatus != SD.StatusShipped
+                                             && Model.OrderHeader.OrderStatus != SD.StatusCancelled
+                                             && Model.OrderHeader.OrderStatus != SD.StatusRefunded)
+                    {
+                        <button type="submit"
+                                asp-area="Admin" asp-controller="Order" asp-action="CancelOrder"
+                                asp-route-id="@Model.OrderHeader.Id"
+                                class="btn btn-danger px-4">
+                            <i class="fa-solid fa-xmark fa-sm me-2"></i>Cancel Order
+                        </button>
+                    }
+                }
+
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Validates carrier and tracking number fields before ShipOrder is submitted
+        function ValidateInput() {
+            const trackingNumber = document.getElementById("trackingNumber").value.trim();
+            const carrier = document.getElementById("carrier").value.trim();
+
+            if (trackingNumber === "") {
+                Swal.fire({
+                    icon: "error",
+                    title: "Validation Error",
+                    text: "Please enter a tracking number before shipping."
+                });
+                return false;
+            }
+
+            if (carrier === "") {
+                Swal.fire({
+                    icon: "error",
+                    title: "Validation Error",
+                    text: "Please enter a carrier before shipping."
+                });
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+}

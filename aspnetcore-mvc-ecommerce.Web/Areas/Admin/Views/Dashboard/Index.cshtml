@@ -60,6 +60,9 @@
         </div>
     </div>
 
+    @if (User.IsInRole(SD.Role_Admin))
+    {
+
     <!-- Total Companies -->
     <div class="col-12 col-md-6 col-lg-3">
         <div class="card h-100 shadow-sm">
@@ -83,6 +86,7 @@
             </div>
         </div>
     </div>
+    }
 
     <!-- Total Orders -->
     <div class="col-12 col-md-6 col-lg-3">
@@ -133,11 +137,14 @@
         </a>
     </div>
 
-    <!-- Add new company shortcut -->
-    <div class="col-12 col-md-4">
-        <a asp-area="Admin" asp-controller="Company" asp-action="Upsert"
-               class="btn btn-outline-dark w-100 py-3">
-            <i class="fa-solid fa-plus me-2"></i>Add New Company
-        </a>
-    </div>
+    @if (User.IsInRole(SD.Role_Admin))
+    {
+        <!-- Add new company shortcut -->
+        <div class="col-12 col-md-4">
+            <a asp-area="Admin" asp-controller="Company" asp-action="Upsert"
+                   class="btn btn-outline-dark w-100 py-3">
+                <i class="fa-solid fa-plus me-2"></i>Add New Company
+            </a>
+        </div>
+    }
 </div>

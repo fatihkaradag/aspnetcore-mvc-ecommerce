@@ -1142,3 +1142,40 @@ footer.footer {
     .animate-fade-up:nth-child(6) {
         animation-delay: 0.40s;
     }
+
+
+
+/* ============================================================
+   NAV TABS — Bootstrap override
+   ============================================================ */
+.nav-tabs {
+    border-bottom: 2px solid var(--c-border-dk);
+}
+
+.nav-tabs .nav-link {
+    font-family: var(--font-body) !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.07em !important;
+    text-transform: uppercase;
+    color: var(--c-brown-lt) !important;
+    border: none !important;
+    border-bottom: 2.5px solid transparent !important;
+    border-radius: 0 !important;
+    margin-bottom: -2px;
+    padding: 0.65rem 1.25rem !important;
+    background: none !important;
+    transition: color var(--ease), border-color var(--ease) !important;
+}
+
+    .nav-tabs .nav-link:hover {
+        color: var(--c-ink) !important;
+        border-bottom-color: var(--c-border-dk) !important;
+    }
+
+    .nav-tabs .nav-link.active,
+    .nav-tabs .nav-item.show .nav-link {
+        color: var(--c-accent) !important;
+        border-bottom-color: var(--c-accent) !important;
+        background: none !important;
+    }

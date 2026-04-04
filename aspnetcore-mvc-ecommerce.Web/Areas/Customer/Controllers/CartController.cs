@@ -161,7 +161,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
                 // Individual customer — creates Stripe checkout session for immediate payment
-                var domain = "https://localhost:7185";
+                var domain = $"{Request.Scheme}://{Request.Host.Value}/";
 
                 var options = new Stripe.Checkout.SessionCreateOptions
                 {

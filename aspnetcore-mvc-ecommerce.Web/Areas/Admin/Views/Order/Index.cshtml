@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "Orders";
+}
+
+<style>
+    /* ── Editorial Order Tabs ─────────────────────────────── */
+    .order-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid var(--c-border-dk);
+        margin-bottom: var(--sp-xl);
+        flex-wrap: wrap;
+    }
+
+    .order-tab {
+        font-family: var(--font-body);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--c-brown-lt);
+        background: none;
+        border: none;
+        border-bottom: 2.5px solid transparent;
+        margin-bottom: -2px;
+        padding: 0.65rem 1.25rem;
+        cursor: pointer;
+        transition: color var(--ease), border-color var(--ease);
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        white-space: nowrap;
+    }
+
+    .order-tab:hover {
+        color: var(--c-ink);
+    }
+
+    .order-tab.active {
+        color: var(--c-accent);
+        border-bottom-color: var(--c-accent);
+    }
+
+    .order-tab .tab-count {
+        font-size: 0.65rem;
+        font-weight: 700;
+        background-color: var(--c-border);
+        color: var(--c-brown);
+        border-radius: 999px;
+        padding: 0.1em 0.55em;
+        line-height: 1.6;
+        transition: background-color var(--ease), color var(--ease);
+    }
+
+    .order-tab.active .tab-count {
+        background-color: var(--c-accent-bg);
+        color: var(--c-accent);
+    }
+
+    /* ── Table overrides ──────────────────────────────────── */
+    #tblData thead tr th {
+        background-color: var(--c-parchment);
+    }
+
+    /* DataTables search / length / info */
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select {
+        font-family: var(--font-body);
+        font-size: 0.82rem;
+        border: 1.5px solid var(--c-border);
+        border-radius: var(--radius-sm);
+        padding: 0.35rem 0.75rem;
+        color: var(--c-ink);
+        background-color: var(--c-cream);
+        outline: none;
+        transition: border-color var(--ease);
+    }
+
+    .dataTables_wrapper .dataTables_filter input:focus,
+    .dataTables_wrapper .dataTables_length select:focus {
+        border-color: var(--c-accent);
+    }
+
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_filter label,
+    .dataTables_wrapper .dataTables_length label {
+        font-family: var(--font-body);
+        font-size: 0.78rem;
+        color: var(--c-brown-lt);
+    }
+
+    /* Status badge colours */
+    .status-badge {
+        font-family: var(--font-body);
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        border-radius: var(--radius-sm);
+        padding: 0.25em 0.65em;
+        display: inline-block;
+    }
+    .status-pending    { background: var(--c-warning-bg); color: var(--c-warning); }
+    .status-inprocess  { background: var(--c-info-bg);    color: var(--c-info);    }
+    .status-completed  { background: var(--c-success-bg); color: var(--c-success); }
+    .status-approved   { background: var(--c-accent-bg);  color: var(--c-accent);  }
+    .status-cancelled  { background: var(--c-danger-bg);  color: var(--c-danger);  }
+</style>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Panel</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Orders</li>
+    </ol>
+</nav>
+
+<!-- Page header -->
+<div class="d-flex align-items-end justify-content-between mb-4 gap-3 flex-wrap">
+    <div>
+        <span class="section-label">Management</span>
+        <h1 class="section-title mb-0">Order List</h1>
+    </div>
+    <div class="d-flex gap-2">
+        <span style="font-family:var(--font-body);font-size:0.8rem;
+                     color:var(--c-brown-lt);font-style:italic;align-self:flex-end;
+                     padding-bottom:0.25rem;">
+            <i class="fa-regular fa-clock me-1"></i>
+            Last updated: <span id="lastUpdated">—</span>
+        </span>
+    </div>
+</div>
+
+<!-- Status filter tabs -->
+<div class="order-tabs" id="orderTabs" role="tablist">
+
+    <button class="order-tab active" onclick="switchTab(this, 'all')" role="tab">
+        <i class="fa-solid fa-layer-group fa-xs"></i>
+        All
+        <span class="tab-count" id="count-all">—</span>
+    </button>
+
+    <button class="order-tab" onclick="switchTab(this, 'pending')" role="tab">
+        <i class="fa-regular fa-clock fa-xs"></i>
+        Pending
+        <span class="tab-count" id="count-pending">—</span>
+    </button>
+
+    <button class="order-tab" onclick="switchTab(this, 'inprocess')" role="tab">
+        <i class="fa-solid fa-gears fa-xs"></i>
+        Processing
+        <span class="tab-count" id="count-inprocess">—</span>
+    </button>
+
+    <button class="order-tab" onclick="switchTab(this, 'approved')" role="tab">
+        <i class="fa-solid fa-circle-check fa-xs"></i>
+        Approved
+        <span class="tab-count" id="count-approved">—</span>
+    </button>
+
+    <button class="order-tab" onclick="switchTab(this, 'completed')" role="tab">
+        <i class="fa-solid fa-box-archive fa-xs"></i>
+        Completed
+        <span class="tab-count" id="count-completed">—</span>
+    </button>
+
+</div>
+
+<!-- Order DataTable -->
+<div class="card p-0" style="overflow:visible;">
+    <div class="card-body p-0">
+        <table id="tblData" class="table table-hover mb-0" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/order.js"></script>
+    <script>
+        // Tab switching
+        function switchTab(el, status) {
+            document.querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            loadDataTable(status);
+        }
+
+        // Timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent =
+                now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        }
+        updateTimestamp();
+    </script>
+}
