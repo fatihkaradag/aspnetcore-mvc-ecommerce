@@ -49,7 +49,7 @@ namespace aspnetcore_mvc_ecommerce.Models
         public DateTime PaymentDate { get; set; }
 
         // Due date for delayed payment — used for company accounts
-        public DateOnly PaymentDueDate { get; set; }
+        public DateTime PaymentDueDate { get; set; }
 
         public string? SessionId { get; set; }
 

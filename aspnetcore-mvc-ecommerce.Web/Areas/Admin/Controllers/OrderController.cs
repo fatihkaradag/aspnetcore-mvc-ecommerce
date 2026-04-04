@@ -149,7 +149,7 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Admin.Controllers
 
             // Set 30-day payment due date for company/delayed-payment orders
             if (orderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment)
-                orderHeader.PaymentDueDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30));
+                orderHeader.PaymentDueDate = DateTime.UtcNow.AddDays(30);
 
             _unitOfWork.OrderHeader.Update(orderHeader);
             await _unitOfWork.SaveAsync();
