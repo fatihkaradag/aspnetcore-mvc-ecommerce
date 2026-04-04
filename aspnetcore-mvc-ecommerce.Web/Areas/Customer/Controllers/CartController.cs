@@ -3,6 +3,7 @@ using aspnetcore_mvc_ecommerce.Models;
 using aspnetcore_mvc_ecommerce.Models.ViewModels;
 using aspnetcore_mvc_ecommerce.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -15,15 +16,17 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CartController> _logger;
+        private readonly IEmailSender _emailSender;
 
         // Bound property for the shopping cart ViewModel — shared across actions
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; } = new();
 
-        public CartController(IUnitOfWork unitOfWork, ILogger<CartController> logger)
+        public CartController(IUnitOfWork unitOfWork, ILogger<CartController> logger, IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _emailSender = emailSender;
         }
 
         // GET: /Cart/Index — retrieves and displays the current user's shopping cart
@@ -163,12 +166,11 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
                 // Individual customer — creates Stripe checkout session for immediate payment
                 var domain = $"{Request.Scheme}://{Request.Host.Value}/";
 
+
                 var options = new Stripe.Checkout.SessionCreateOptions
                 {
-                    // Redirects to order confirmation on success
-                    SuccessUrl = domain + $"/customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
-                    // Redirects back to cart on cancel
-                    CancelUrl = domain + "/customer/cart/index",
+                    SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+                    CancelUrl = domain + "customer/cart/index",
                     LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
                     Mode = "payment",
                 };
@@ -216,37 +218,59 @@ namespace aspnetcore_mvc_ecommerce.Web.Areas.Customer.Controllers
         // GET: /Cart/OrderConfirmation — verifies payment and clears cart after order
         public async Task<IActionResult> OrderConfirmation(int id)
         {
-            // Fetches order header with user info to verify payment status
+            // Reject invalid id early
+            if (id <= 0) return BadRequest();
+
+            // Fetch order header with user info to verify payment status
             OrderHeader? orderHeader = await _unitOfWork.OrderHeader.GetAsync(
                 u => u.Id == id,
                 includeProperties: "ApplicationUser"
             );
 
-            if (orderHeader == null) return NotFound();
+            if (orderHeader == null)
+            {
+                _logger.LogWarning("OrderConfirmation: Order {OrderId} not found.", id);
+                return NotFound();
+            }
 
+            // Verify Stripe payment for non-delayed-payment orders
             if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
             {
-                // Individual customer — verifies Stripe payment was completed
                 var service = new Stripe.Checkout.SessionService();
-                Stripe.Checkout.Session session = service.Get(orderHeader.SessionId);
 
-                if (session.PaymentStatus.ToLower() == "paid")
+                // Fetch Stripe session to confirm payment status
+                Stripe.Checkout.Session session = await service.GetAsync(orderHeader.SessionId);
+
+                if (session.PaymentStatus.Equals("paid", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Updates order with confirmed payment intent ID and approves order
                     _unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
                     _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     await _unitOfWork.SaveAsync();
                 }
+
                 HttpContext.Session.Clear();
             }
 
-            // Clears the user's shopping cart after successful order placement
+            
+            // Send order confirmation email to customer
+            await _emailSender.SendEmailAsync(
+                orderHeader.ApplicationUser!.Email!,
+                $"Order Confirmed — #{orderHeader.Id}",
+                $"<p>Thank you! Your order <strong>#{orderHeader.Id}</strong> has been successfully placed.</p>"
+            );
+
+            // Clear the user's shopping cart after successful order placement
             List<ShoppingCart> shoppingCarts = (await _unitOfWork.ShoppingCart.GetAllAsync(
                 u => u.ApplicationUserId == orderHeader.ApplicationUserId
             )).ToList();
 
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
             await _unitOfWork.SaveAsync();
+
+            // Reset session cart count to zero after cart is cleared
+            HttpContext.Session.SetInt32(SD.SessionCart, 0);
+
+            _logger.LogInformation("Order {OrderId} confirmed and cart cleared.", id);
 
             return View(id);
         }

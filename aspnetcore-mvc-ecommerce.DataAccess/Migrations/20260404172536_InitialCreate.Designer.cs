@@ -12,7 +12,7 @@ using aspnetcore_mvc_ecommerce.DataAccess.Data;
 namespace aspnetcore_mvc_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260404165038_InitialCreate")]
+    [Migration("20260404172536_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
